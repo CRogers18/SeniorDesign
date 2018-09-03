@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.group10.backupbuddy.SettingsActivity">
+
+    <LinearLayout
+        android:layout_width="344dp"
+        android:layout_height="551dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/btToggleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable Bluetooth" />
+
+        <Button
+            android:id="@+id/discoverToggleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toggle Discoverablity" />
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space2"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Available Connections"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <ListView
+            android:id="@+id/lvNewDevices"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scrollbars="vertical" />
+
+        <Button
+            android:id="@+id/btConnectBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect" />
+
+        <Button
+            android:id="@+id/gridToggleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Disable Distance Grid"
+            android:textAlignment="center" />
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space3"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Overlay Opacity"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <SeekBar
+            android:id="@+id/gridOpacityBar"
+            style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="28dp" />
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save and Exit" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
