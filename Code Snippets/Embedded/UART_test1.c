@@ -1,6 +1,7 @@
 //This code is a combination of our code and examples given by TI
 //Code has a init_uart, out to uart and recieve from uart
 
+
 #include <msp430.h> 
 
 //Taken from TIs example: msp430fr59xx_euscia0_uart_01.c
