@@ -1,22 +1,18 @@
 package com.group10.backupbuddy;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.nio.*;
+import java.nio.ByteOrder;
 
 public class MainMenuActivity extends AppCompatActivity {
+
+    private static Context appContext;
 
     private final String actID = "MainMenuActivity";
     public static UserConfig userSettings;
@@ -31,7 +27,8 @@ public class MainMenuActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main_menu);
 
-        userSettings = new UserConfig();
+        appContext = getApplicationContext();
+        userSettings = new UserConfig(appContext);
 
         System.out.println("User settings loaded successfully.");
         System.out.println("Android using byte-order: " + ByteOrder.nativeOrder());
@@ -55,9 +52,19 @@ public class MainMenuActivity extends AppCompatActivity {
         settings.setOnClickListener(e -> {
 
             Intent settingsIntent = new Intent(MainMenuActivity.this, SettingsActivity.class);
+
+            settingsIntent.putExtra("btEnabled", userSettings.isBluetoothEnabled());
+            settingsIntent.putExtra("btIsDiscover", userSettings.isIsDiscoverable());
+            settingsIntent.putExtra("gridEnabled", userSettings.isDistanceGridEnabled());
+            settingsIntent.putExtra("gridOpacity", userSettings.getGridOpacity());
+
             MainMenuActivity.this.startActivity(settingsIntent);
 
         });
+    }
+
+    public static Context getAppContext() {
+        return appContext;
     }
 }
 

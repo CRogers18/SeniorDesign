@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
     Button toggleBt, toggleDiscoverable, connect, toggleGrid, save;
     Boolean btEnabled, isDicoverable, gridActive;
-    Double gridOpacity;
+    Float gridOpacity;
 
     private final String actID = "SettingsActivity";
 
@@ -162,6 +163,17 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
         unregisterReceiver(btBRDeviceConnect);
 
+        Context c = MainMenuActivity.getAppContext();
+
+        // Gets application context and saves settings
+        SharedPreferences userPrefs = c.getSharedPreferences("UserSettings", 0);
+        SharedPreferences.Editor edit = userPrefs.edit();
+        edit.putBoolean("btEnable", btEnabled);
+        edit.putBoolean("btIsDiscover", isDicoverable);
+        edit.putBoolean("distanceGridEnabled", gridActive);
+        edit.putFloat("gridOpacity", gridOpacity);
+        edit.apply();
+
         Log.d(actID, "Bluetooth Broadcast Receivers closed");
     }
 
@@ -172,17 +184,22 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         getSupportActionBar().hide();
         setContentView(R.layout.activity_settings);
 
+        Context c = MainMenuActivity.getAppContext();
+
+        // Gets application context and saves settings
+        SharedPreferences userPrefs = c.getSharedPreferences("UserSettings", 0);
+
+        btEnabled = userPrefs.getBoolean("btEnable", false);
+        isDicoverable = userPrefs.getBoolean("btIsDiscover", false);
+        gridActive = userPrefs.getBoolean("distanceGridEnabled", false);
+        gridOpacity = userPrefs.getFloat("gridOpacity", 0.4f);
+
         toggleBt = (Button) findViewById(R.id.btToggleBtn);
         toggleDiscoverable = (Button) findViewById(R.id.discoverToggleBtn);
         connect = (Button) findViewById(R.id.btConnectBtn);
         toggleGrid = (Button) findViewById(R.id.gridToggleBtn);
         save = (Button) findViewById(R.id.saveBtn);
         connectionsList = (ListView) findViewById(R.id.lvNewDevices);
-
-        btEnabled = UserConfig.isBluetoothEnabled();
-        isDicoverable = UserConfig.isIsDiscoverable();
-        gridActive = UserConfig.isDistanceGridEnabled();
-        gridOpacity = UserConfig.getGridOpacity();
 
         connectionsList.setOnItemClickListener(SettingsActivity.this);
 
@@ -207,9 +224,9 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             toggleDiscoverable.setText("Make Device Discoverable");
 
         if(gridActive)
-            toggleGrid.setText("Turn Distance Grid ON");
-        else
             toggleGrid.setText("Turn Distance Grid OFF");
+        else
+            toggleGrid.setText("Turn Distance Grid ON");
 
         if(connectionsList.getChildCount() == 0)
         {
@@ -218,9 +235,18 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             else
                 connect.setText("Bluetooth Not Found");
         }
-
         else
             connect.setText("Connect");
+
+        toggleGrid.setOnClickListener(e -> {
+
+            gridActive = !gridActive;
+
+            if(gridActive)
+                toggleGrid.setText("Turn Distance Grid OFF");
+            else
+                toggleGrid.setText("Turn Distance Grid ON");
+        });
 
         // Exits the activity with modified values
         save.setOnClickListener(e -> finish());
@@ -240,6 +266,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
                 Log.d(actID, "Device has been made discoverable for 2 minutes.");
                 toggleDiscoverable.setText("Now Discoverable");
+                isDicoverable = true;
             }
 
             else
@@ -248,20 +275,8 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             if(btAdapter.isDiscovering())
             {
                 btAdapter.cancelDiscovery();
-
-                // Android required permission check for bluetooth on versions higher than lollipop
-                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
-                {
-                    int permCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
-                    permCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
-
-                    if(permCheck != 0)
-                        this.requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
-                }
-
-                btAdapter.startDiscovery();
-                IntentFilter discoverDevice = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(btBRDeviceDiscovery, discoverDevice);
+                isDicoverable = false;
+                toggleDiscoverable.setText("Make Device Discoverable");
             }
 
             else if(!btAdapter.isDiscovering())
@@ -277,6 +292,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
                 }
 
                 btAdapter.startDiscovery();
+                isDicoverable = true;
                 IntentFilter discoverDevice = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(btBRDeviceDiscovery, discoverDevice);
             }
@@ -300,6 +316,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
                 toggleDiscoverable.setEnabled(true);
 
             toggleBt.setText("Disable Bluetooth");
+            btEnabled = true;
 
             // Listens for changes to the adapter and logs them via broadcast receivers
             IntentFilter bluetoothIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -309,6 +326,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         else if(btAdapter.isEnabled())
         {
             btAdapter.disable();
+            btEnabled = false;
 
             Log.d(actID, "Disabling Bluetooth");
 
