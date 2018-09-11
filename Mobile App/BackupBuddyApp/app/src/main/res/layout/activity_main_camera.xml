@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.group10.backupbuddy.BackUpCameraFeed">
+    tools:context="com.group10.backupbuddy.BackUpCamera">
 
 
     <VideoView
@@ -13,8 +13,16 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         />
+    <!--// SO this is how I flash red if they are getting close by toggling the-->
+    <!--visibility of this https://stackoverflow.com/questions/2838757/how-to-set-opacity-alpha-for-view-in-android-->
+    <View
+        android:id="@+id/redAlert"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="#66FF0000"/>
 
     <ImageView
+        android:id="@+id/gridLine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/gridline"

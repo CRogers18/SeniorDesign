@@ -2,6 +2,7 @@ package com.group10.backupbuddy;
 
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.widget.ImageButton;
 import android.widget.VideoView;
 import java.lang.Override;
 import java.lang.Exception;
+import android.media.ToneGenerator;
+import android.media.AudioManager;
+
 
 public class BackUpCamera extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,7 +23,6 @@ public class BackUpCamera extends AppCompatActivity implements View.OnClickListe
 
 
     String videoUrl = "https://test.b-cdn.net/bunny_720p.m4v";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class BackUpCamera extends AppCompatActivity implements View.OnClickListe
         mDialog.setMessage("Please wait...");
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
+      //  ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        //toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
 
         try{
             if(!videoView.isPlaying()) {

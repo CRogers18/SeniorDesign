@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     Button toggleBt, toggleDiscoverable, connect, toggleGrid, save;
     Boolean btEnabled, isDicoverable, gridActive;
     Float gridOpacity;
+
 
     private final String actID = "SettingsActivity";
 
@@ -178,12 +180,12 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_settings);
 
+<<<<<<< Updated upstream
         Context c = MainMenuActivity.getAppContext();
 
         // Gets application context and saves settings
@@ -194,6 +196,9 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         gridActive = userPrefs.getBoolean("distanceGridEnabled", false);
         gridOpacity = userPrefs.getFloat("gridOpacity", 0.4f);
 
+=======
+        ImageView gridImgView = (ImageView)findViewById(R.id.gridLine);
+>>>>>>> Stashed changes
         toggleBt = (Button) findViewById(R.id.btToggleBtn);
         toggleDiscoverable = (Button) findViewById(R.id.discoverToggleBtn);
         connect = (Button) findViewById(R.id.btConnectBtn);
@@ -208,34 +213,46 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if(btAdapter == null)
-        {
+        if (btAdapter == null) {
             toggleBt.setText("Bluetooth Not Found");
             toggleDiscoverable.setEnabled(false);
-        }
-        else if(btAdapter.isEnabled())
+        } else if (btAdapter.isEnabled())
             toggleBt.setText("Disable Bluetooth");
-        else if(!btAdapter.isEnabled())
+        else if (!btAdapter.isEnabled())
             toggleBt.setText("Enable Bluetooth");
 
         toggleBt.setOnClickListener(e -> toggleBluetooth());
 
-        if(isDicoverable)
+        if (isDicoverable)
             toggleDiscoverable.setText("Make Device Discoverable");
 
+<<<<<<< Updated upstream
         if(gridActive)
             toggleGrid.setText("Turn Distance Grid OFF");
         else
             toggleGrid.setText("Turn Distance Grid ON");
+=======
+        if (gridActive) {
+            toggleGrid.setText("Turn Distance Grid ON");
+           // gridImgView.setVisibility(View.GONE);
+        }
+        else {
+            toggleGrid.setText("Turn Distance Grid OFF");
+            //gridImgView.setVisibility(View.VISIBLE);
+        }
+>>>>>>> Stashed changes
 
-        if(connectionsList.getChildCount() == 0)
-        {
-            if(btAdapter != null && btAdapter.isEnabled())
+        if (connectionsList.getChildCount() == 0) {
+            if (btAdapter != null && btAdapter.isEnabled())
                 connect.setText("Scan for Devices");
             else
                 connect.setText("Bluetooth Not Found");
+<<<<<<< Updated upstream
         }
         else
+=======
+        } else
+>>>>>>> Stashed changes
             connect.setText("Connect");
 
         toggleGrid.setOnClickListener(e -> {
@@ -254,8 +271,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         toggleDiscoverable.setOnClickListener(e -> {
 
             // If adapter is not already discoverable, make discoverable
-            if(btAdapter != null && btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE)
-            {
+            if (btAdapter != null && btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                 // Will make the device discoverable for 2 minutes to help with pairing
                 Intent makeDiscoverable = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                 makeDiscoverable.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
@@ -266,29 +282,48 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
                 Log.d(actID, "Device has been made discoverable for 2 minutes.");
                 toggleDiscoverable.setText("Now Discoverable");
+<<<<<<< Updated upstream
                 isDicoverable = true;
             }
 
             else
+=======
+            } else
+>>>>>>> Stashed changes
                 Log.d(actID, "Making device discoverable failed. Perhaps the device does not support bluetooth.");
 
-            if(btAdapter.isDiscovering())
-            {
+            if (btAdapter.isDiscovering()) {
                 btAdapter.cancelDiscovery();
+<<<<<<< Updated upstream
                 isDicoverable = false;
                 toggleDiscoverable.setText("Make Device Discoverable");
             }
 
             else if(!btAdapter.isDiscovering())
             {
+=======
+
                 // Android required permission check for bluetooth on versions higher than lollipop
-                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
-                {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                     int permCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
                     permCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
 
-                    if(permCheck != 0)
-                        this.requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
+                    if (permCheck != 0)
+                        this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                }
+
+                btAdapter.startDiscovery();
+                IntentFilter discoverDevice = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(btBRDeviceDiscovery, discoverDevice);
+            } else if (!btAdapter.isDiscovering()) {
+>>>>>>> Stashed changes
+                // Android required permission check for bluetooth on versions higher than lollipop
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    int permCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+                    permCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+
+                    if (permCheck != 0)
+                        this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
                 }
 
                 btAdapter.startDiscovery();
