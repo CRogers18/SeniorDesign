@@ -45,6 +45,9 @@ public class MainMenuActivity extends AppCompatActivity {
             Intent cameraFeedIntent = new Intent(MainMenuActivity.this, BackUpCamera.class);
             MainMenuActivity.this.startActivity(cameraFeedIntent);
 
+           // Intent bluetoothFun = new Intent(MainMenuActivity.this, bluetoothLearning.class);
+         //   MainMenuActivity.this.startActivity(bluetoothFun);
+
 
         });
 
