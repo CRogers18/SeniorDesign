@@ -73,9 +73,13 @@ unsigned char INCHAR_UART(void){
 }
 
 //Interrupt to listen for the wake call to start everything
-#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+//#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+
+//Probably need to change this vector? Not sure yet, listening for Bluetooth communication over UART
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void)
+
+//What is this
 #elif defined(__GNUC__)
 void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
 #else
@@ -94,4 +98,8 @@ void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
 		case USCI_UART_UCSTTIFG: break;
 		case USCI_UART_UCTXCPTIFG: break;
 	}
+
+	//Our Code starts here
+	//Want an if statement that checks for a signal sent from the phone that will be
+	//the wakeup command (Single 8 bit char)
 }
