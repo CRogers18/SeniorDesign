@@ -52,6 +52,25 @@ void init_UART(){
 	UCA0IE |= UCRXIE;
 }
 
+void OUTA_UART(unsigned char data){
+
+	// wait for the transmit buffer to be empty before sending data
+	do{}
+	while((UCA0IFG & 0x02) == 0);
+
+	// send the data to the transmit buffer
+	UCA0TXBUF_L = data;
+}
+
+unsigned char INCHAR_UART(void){
+
+	// wait for the receive buffer to be full before getting the data
+	do{}
+	while((UCA0IFG & 0x01) == 0);
+
+	// go get the char from the receive buffer
+	return UCA0RXBUF_L;
+}
 
 //Interrupt to listen for the wake call to start everything
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
