@@ -27,18 +27,16 @@ int main(void)
 {
 	WDTCTL = WDTPW + WDTHOLD;       // Stop Watch Dog Timer
 
-	/* set P1.5 to output direction (trigger) */
-	P1DIR |= BIT5;
-	P1OUT &= ~BIT5;					// keep trigger at low
+	/* set P1.4 to output direction (trigger) */
+	P1DIR |= BIT4;
+	P1OUT &= ~BIT4;					// keep trigger at low
 
-
-
-    /* Set P1.4 to input direction (echo)
-	  Why P1.4? - msp430g2231 datasheet mention this as 
+    /* Set P1.1 to input direction (echo)
+	  Why P1.1? - msp430g2231 datasheet mention this as 
 	  input for Timer A0 - Compare/Capture input */
-	P1DIR &= ~BIT4;
-	// Select P1.4 as timer trigger input select (echo from sensor)
-	P1SEL = BIT4;
+	P1DIR &= ~BIT1;
+	// Select P1.1 as timer trigger input select (echo from sensor)
+	P1SEL = BIT1;
 
 	/* Timer A0 configure to read echo signal:  
 	Timer A Capture/Compare Control 0 =>
@@ -47,10 +45,7 @@ int main(void)
 	capture input select 0 => P1.1 (CCI1A) + 
     capture mode + 
 	capture compare interrupt enable */
-	//CCTL0 |= CM_3 + SCS + CCIS_0 + CAP + CCIE;
-
-	//For our msp430
-	TA0CCTL0 |= CM_3 + SCS + CCIS_0 + CAP + CCIE;
+	CCTL0 |= CM_3 + SCS + CCIS_0 + CAP + CCIE;
 	
 	/* Timer A Control configuration =>
 	Timer A clock source select: 1 - SMClock + 

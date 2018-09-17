@@ -36,25 +36,24 @@ int main(void)
         CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // Set all dividers
         CSCTL0_H = 0;                             // Lock CS registers
 
-    init_UART();
+    	init_UART();
 
-    __bis_SR_register(LPM0_bits + GIE);     // Enter LPM0, interrupts enabled
+    	__bis_SR_register(LPM0_bits + GIE);     // Enter LPM0, interrupts enabled
 
-      while(1)
-      {
-            switch (Rx_Data)
-            {
-                case 0x41:                          // Forward Command 0001
-                    OUTA_UART(0x41);              // Send 8-bit character
-                    TA0CCTL0 &= ~CCIE;              // Disable Timer0_A interrupts                    //Set P1.0 to high
-                    break;
+	      while(1)
+	      {
+	            switch (Rx_Data)
+	            {
+	                case 0x41:                          // Forward Command 0001
+	                    OUTA_UART(0x41);              // Send 8-bit character
+	                    TA0CCTL0 &= ~CCIE;              // Disable Timer0_A interrupts                    //Set P1.0 to high
+	                    break;
 
-                default: break;
-            }
-         __bis_SR_register(LPM0_bits);  // Enter LPM0, interrupts enabled
-  }
+	                default: break;
+	            }
+	         __bis_SR_register(LPM0_bits);  // Enter LPM0, interrupts enabled
+	  }
 }
-
 
 
 //  USCI A interrupt handler
