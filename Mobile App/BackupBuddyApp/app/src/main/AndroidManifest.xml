@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
 
+
     <application
         android:name=".UserConfig"
         android:allowBackup="true"
@@ -31,6 +32,11 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".BackUpCamera" />
         <activity android:name=".bluetoothLearning"></activity>
+
+        <activity android:name=".bluetoothLearning" />
+        <activity android:name=".BluetoothActivity"></activity>
+        <activity android:name=".bluetoothLearning"></activity>
+
     </application>
 
 </manifest>
