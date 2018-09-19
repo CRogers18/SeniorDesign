@@ -14,6 +14,7 @@ import android.widget.Button;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLOutput;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,6 +32,15 @@ public class BluetoothActivity extends Activity
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
+
+    float Val;
+    int byteCount = 0;
+    int[] byteBuffer = new int[4];
+
+
+    public static int unsignedToBytes(byte b) {
+        return b & 0xFF;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -155,8 +165,15 @@ public class BluetoothActivity extends Activity
 
                             byte[] packetBytes = new byte[bytesAvailable];
                             mmInputStream.read(packetBytes);
+
                             for(int i=0;i<bytesAvailable;i++)
                             {
+                                System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
+
+                                byteBuffer[byteCount] = (packetBytes[i] & 0xff);
+                                byteCount++;
+
+                                System.out.println("val: = " + Val);
                                 byte b = packetBytes[i];
                                 if(b == delimiter)
                                 {
@@ -181,6 +198,32 @@ public class BluetoothActivity extends Activity
                                     readBuffer[readBufferPosition++] = b;
                                 }
                             }
+
+                            if(byteCount > 3)
+                            {
+                                byteCount = 0;
+
+
+                                //Val = ( (unsignedToBytes(byteBuffer[0])) | (unsignedToBytes(byteBuffer[1]) << 8) | (unsignedToBytes(byteBuffer[2]) << 16) | (unsignedToBytes(byteBuffer[3]) << 24));
+
+                                //Val = Byte.toUnsignedInt(byteBuffer[0]) | Byte.toUnsignedInt(byteBuffer[1]) << 8 | Byte.toUnsignedInt(byteBuffer[2]) << 16|Byte.toUnsignedInt(byteBuffer[3]) <<24;
+                                      //  Val = (int)byteBuffer[0] & 0xff | ((int)byteBuffer[1] & 0xff) << 8 | ((int)byteBuffer[2] & 0xff) << 16 | ((int)byteBuffer[3] & 0xff) << 24 ;
+                                System.out.println("ByteBuffer[3: " + byteBuffer[3]);
+                                System.out.println("ByteBuffer[2: " + byteBuffer[2]);
+                                System.out.println("ByteBuffer[1: " + byteBuffer[1]);
+                                System.out.println("ByteBuffer[0: " + byteBuffer[0]);
+
+
+                                 Val = Float.intBitsToFloat(
+                                        (byteBuffer[3])
+                                                | ((byteBuffer[2]) << 8)
+                                                | ((byteBuffer[1]) << 16)
+                                                | ((byteBuffer[0]) << 24));
+
+                                System.out.println("VAl: " + Val);
+
+                            }
+
                         }
                     }
                     catch (IOException ex)
