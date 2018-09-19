@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,11 +33,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     public ArrayList<BluetoothDevice> btDevices = new ArrayList<>();
     public DeviceListAdapter mDeviceListAdapter;
     ListView connectionsList;
-
-    BluetoothSerial btSerial;
-    private BroadcastReceiver bluetoothConnectReceiver;
-    private BroadcastReceiver bluetoothDisconnectReceiver;
-
 
     // Broadcast receiver for logging bluetooth ON/OFF status
     private final BroadcastReceiver btBROnOff = new BroadcastReceiver()
@@ -191,30 +185,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_settings);
 
         Context c = MainMenuActivity.getAppContext();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothConnectReceiver, new IntentFilter(BluetoothSerial.BLUETOOTH_CONNECTED));
-        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothDisconnectReceiver, new IntentFilter(BluetoothSerial.BLUETOOTH_DISCONNECTED));
-        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothDisconnectReceiver, new IntentFilter(BluetoothSerial.BLUETOOTH_FAILED));
-
-        btSerial = new BluetoothSerial(c, new BluetoothSerial.MessageHandler() {
-
-            private int byteCount = 0;
-
-            @Override
-            public int read(int bufferSize, byte[] buffer) {
-
-                byteCount++;
-
-                if(byteCount % 4 == 0)
-                    return 4;
-                else
-                    return 0;
-
-            }
-
-        }, "HC-06");
-
-        btSerial.connect();
 
         // Gets application context and saves settings
         SharedPreferences userPrefs = c.getSharedPreferences("UserSettings", 0);
