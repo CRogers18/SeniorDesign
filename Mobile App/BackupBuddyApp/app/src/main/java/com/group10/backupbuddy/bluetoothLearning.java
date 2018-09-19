@@ -12,15 +12,7 @@ package com.group10.backupbuddy;
 //    }
 //}
 
-<<<<<<< Updated upstream
 
-=======
-<<<<<<< HEAD
-//origin https://stackoverflow.com/questions/22899475/android-sample-bluetooth-code-to-send-a-simple-string-via-bluetooth
-=======
-
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
 
 import android.annotation.SuppressLint;
         import android.bluetooth.BluetoothAdapter;
@@ -61,23 +53,10 @@ public class bluetoothLearning extends AppCompatActivity {
     public static final int NO_SOCKET_FOUND=4;
 
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-    //private ConnectedThread connectedAny;
-    private BluetoothSocket btSocket;
-
-    String bluetooth_message = "Z";
-=======
->>>>>>> Stashed changes
     String bluetooth_message="00";
 
 
 
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
 
     @SuppressLint("HandlerLeak")
     Handler mHandler=new Handler()
@@ -86,45 +65,15 @@ public class bluetoothLearning extends AppCompatActivity {
         public void handleMessage(Message msg_type) {
             super.handleMessage(msg_type);
 
-<<<<<<< Updated upstream
             switch (msg_type.what){
-=======
-<<<<<<< HEAD
-            switch (msg_type.what)
-            {
-=======
-            switch (msg_type.what){
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
                 case MESSAGE_READ:
 
                     byte[] readbuf=(byte[])msg_type.obj;
                     String string_recieved=new String(readbuf);
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-                    System.out.println("RECEIEVED: " + string_recieved);
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
 
                     //do some task based on recieved string
 
                     break;
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-
-                case MESSAGE_WRITE:
-
-                    if(msg_type.obj!=null)
-                    {
-                        ConnectedThread connectedThread=new ConnectedThread((BluetoothSocket)msg_type.obj);
-                        connectedThread.write(bluetooth_message.getBytes());
-                    }
-
-=======
->>>>>>> Stashed changes
                 case MESSAGE_WRITE:
 
                     if(msg_type.obj!=null){
@@ -132,10 +81,6 @@ public class bluetoothLearning extends AppCompatActivity {
                         connectedThread.write(bluetooth_message.getBytes());
 
                     }
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
                     break;
 
                 case CONNECTED:
@@ -153,36 +98,17 @@ public class bluetoothLearning extends AppCompatActivity {
         }
     };
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
-=======
->>>>>>> Stashed changes
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_learning);
         initialize_layout();
         initialize_bluetooth();
         start_accepting_connection();
         initialize_clicks();
-<<<<<<< Updated upstream
 
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
     }
 
     public void start_accepting_connection()
@@ -193,40 +119,6 @@ public class bluetoothLearning extends AppCompatActivity {
         acceptThread.start();
         Toast.makeText(getApplicationContext(),"accepting",Toast.LENGTH_SHORT).show();
     }
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-
-    public void initialize_clicks()
-    {
-        lv_paired_devices.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                if(position == 4)
-                {
-                    System.out.println("Transmit shit fam");
-                    Message fuckU = new Message();
-                    fuckU.what = MESSAGE_WRITE;
-                    fuckU.obj = btSocket;
-                    bluetooth_message = "A";
-
-                    mHandler.sendMessage(fuckU);
-                }
-
-                else
-                {
-                    Object[] objects = set_pairedDevices.toArray();
-                    BluetoothDevice device = (BluetoothDevice) objects[position];
-
-                    ConnectThread connectThread = new ConnectThread(device);
-                    connectThread.start();
-
-                    Toast.makeText(getApplicationContext(),"device choosen " + device.getName(),Toast.LENGTH_SHORT).show();
-                }
-=======
->>>>>>> Stashed changes
     public void initialize_clicks()
     {
         lv_paired_devices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -240,10 +132,6 @@ public class bluetoothLearning extends AppCompatActivity {
                 connectThread.start();
 
                 Toast.makeText(getApplicationContext(),"device choosen "+device.getName(),Toast.LENGTH_SHORT).show();
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
             }
         });
     }
@@ -286,14 +174,6 @@ public class bluetoothLearning extends AppCompatActivity {
 
                     adapter_paired_devices.add(device.getName() + "\n" + device.getAddress());
                 }
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-
-                adapter_paired_devices.add("Click to transmit\n");
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
             }
         }
     }
@@ -325,13 +205,6 @@ public class bluetoothLearning extends AppCompatActivity {
                 // If a connection was accepted
                 if (socket != null)
                 {
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-                    System.out.println("Connected");
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
                     // Do work to manage the connection (in a separate thread)
                     mHandler.obtainMessage(CONNECTED).sendToTarget();
                 }
@@ -341,13 +214,6 @@ public class bluetoothLearning extends AppCompatActivity {
 
 
     private class ConnectThread extends Thread {
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
@@ -363,13 +229,6 @@ public class bluetoothLearning extends AppCompatActivity {
                 tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
             } catch (IOException e) { }
             mmSocket = tmp;
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-            btSocket = mmSocket;
-=======
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
         }
 
         public void run() {
@@ -399,23 +258,9 @@ public class bluetoothLearning extends AppCompatActivity {
         public void cancel() {
             try {
                 mmSocket.close();
-<<<<<<< Updated upstream
             } catch (IOException e) { }
         }
     }
-=======
-<<<<<<< HEAD
-                System.out.println("Socket closed");
-            } catch (IOException e) { }
-        }
-    }
-
-=======
-            } catch (IOException e) { }
-        }
-    }
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
     private class ConnectedThread extends Thread {
 
         private final BluetoothSocket mmSocket;
@@ -439,16 +284,7 @@ public class bluetoothLearning extends AppCompatActivity {
         }
 
         public void run() {
-<<<<<<< Updated upstream
             byte[] buffer = new byte[2];  // buffer store for the stream
-=======
-<<<<<<< HEAD
-
-            byte[] buffer = new byte[200];  // buffer store for the stream
-=======
-            byte[] buffer = new byte[2];  // buffer store for the stream
->>>>>>> origin/Android-Dev
->>>>>>> Stashed changes
             int bytes; // bytes returned from read()
 
             // Keep listening to the InputStream until an exception occurs
