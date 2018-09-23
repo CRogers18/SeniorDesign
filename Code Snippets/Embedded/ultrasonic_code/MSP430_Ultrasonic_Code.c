@@ -5,14 +5,44 @@ int main(void)
 {
   WDTCTL = WDTPW | WDTHOLD;                 // Stop Watchdog
 
-  // Configure GPIO
+  // Configure GPIO for the Bluetooth module
   P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
   P2SEL0 &= ~(BIT5 | BIT6);
+
+  //COnfigure GPIO for the ultrasonic
 
   // Disable the GPIO power-on default high-impedance mode to activate
   // previously configured port settings
   PM5CTL0 &= ~LOCKLPM5;
 
+
+  init_UART();
+
+  __bis_SR_register(LPM3_bits | GIE);       // Enter LPM3, interrupts enabled
+  __no_operation();                         // For debugger
+}
+
+void ultrasonic_ping() {
+
+  //Ping the echo
+  //delay 10us
+  //ping the trigger
+  //caluclate the distance
+  //distance = duration / 296; also try to divide bt 58 to get distance in
+  //centimeters
+}
+
+void OUTA_UART(unsigned char data){
+
+    // wait for the transmit buffer to be empty before sending data
+    do{}
+    while((UCA1IFG & 0x02) == 0);
+
+    // send the data to the transmit buffer
+    UCA1TXBUF = data;
+}
+
+void init_UART(){
   // Startup clock system with max DCO setting ~8MHz
   CSCTL0_H = CSKEY >> 8;                    // Unlock clock registers
   CSCTL1 = DCOFSEL_3 | DCORSEL;             // Set DCO to 8MHz
@@ -33,22 +63,7 @@ int main(void)
   UCA1MCTLW |= UCOS16 | UCBRF_1;
   UCA1CTLW0 &= ~UCSWRST;                    // Initialize eUSCI
   UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
-
-  __bis_SR_register(LPM3_bits | GIE);       // Enter LPM3, interrupts enabled
-  __no_operation();                         // For debugger
 }
-
-
-void OUTA_UART(unsigned char data){
-
-    // wait for the transmit buffer to be empty before sending data
-    do{}
-    while((UCA1IFG & 0x02) == 0);
-
-    // send the data to the transmit buffer
-    UCA1TXBUF = data;
-}
-
 
 
 void floatToBuffer(float data)
@@ -97,10 +112,7 @@ void __attribute__ ((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
   {
     case USCI_NONE: break;
     case USCI_UART_UCRXIFG:
-//      while(!(UCA1IFG&UCTXIFG));
-//      UCA1TXBUF = UCA1RXBUF;
-        floatToBuffer(12.3456789);
-        //OUTA_UART(UCA1RXBUF);
+      //Code goes here
       __no_operation();
       break;
     case USCI_UART_UCTXIFG: break;
