@@ -1,6 +1,8 @@
 #include "msp430.h"
 #include <stdint.h>
 
+float sensorData[6] = {0};
+
 int main(void)
 {
   WDTCTL = WDTPW | WDTHOLD;                 // Stop Watchdog
@@ -25,11 +27,26 @@ int main(void)
 void ultrasonic_ping() {
 
   //Ping the echo
-  //delay 10us
+  P1DIR |= 0x01;  // set connected pin to output
+  P1OUT ^= 0x01;  // drive connected pin high
+  
+  //delay 10us or 10 cycles at 1 MHz
+  __delay_cycles(10); // bad way to do delay, should use timer w/ interrupts for low-power
+  P1OUT ^= 0x01;  // drive connected pin low
+
   //ping the trigger
-  //caluclate the distance
-  //distance = duration / 296; also try to divide bt 58 to get distance in
-  //centimeters
+  P1DIR |= 0x01;  // set connected pin to input
+
+  // wait 50ms with timer interrupts here
+
+  // timer PWM configuration needed to measure pulse duration
+  float pulseDuration;
+
+  // hand-off data to array, division op will be done on phone app, send raw data over UART
+  sensorData[0] = pulseDuration;
+
+  floatToBuffer(sensorData[0]);
+  //distance = duration / 296; also try to divide bt 58 to get distance in centimeters
 }
 
 void OUTA_UART(unsigned char data){
