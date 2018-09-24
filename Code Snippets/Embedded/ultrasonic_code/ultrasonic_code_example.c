@@ -1,4 +1,10 @@
-/* Build: msp430-gcc -mmcu=msp430g2231 -g -o us-dist-proto.elf us-dist-proto.c */
+/* Build: msp430-gcc -mmcu=msp430g2231 -g -o us-dist-proto.elf us-dist-proto.c 
+
+This code works by setting the trigger to high, and the 
+echo is set on the same GPIO as the Timer, so when an echo
+is recieved that is when the interrupt is triggered, and
+the timers setup can be accessed to figure out the delay,
+and thus how far away the object is */
 
 #include <msp430g2231.h>
 

@@ -27,7 +27,7 @@ int main(void)
 void ultrasonic_ping() {
 
 	//Ping the echo
-	P1DIR |= 0x01;  // set connected pin to output
+	P1DIR |= 0x01;  // set connected pin to output - 1 is output
 	P1OUT ^= 0x01;  // drive connected pin high
 
 	//delay 10us or 10 cycles at 1 MHz
@@ -35,9 +35,10 @@ void ultrasonic_ping() {
 	P1OUT ^= 0x01;  // drive connected pin low
 
 	//ping the trigger
-	P1DIR |= 0x01;  // set connected pin to input
+	P1DIR &= ~(0x01);  // set connected pin to input - 0 is input
 
 	// wait 50ms with timer interrupts here
+	//Need to set up Timer Control, Timer Compare Control, and the hardcoded time for the delay
 
 	// timer PWM configuration needed to measure pulse duration
 	float pulseDuration;
@@ -49,6 +50,7 @@ void ultrasonic_ping() {
 	//distance = duration / 296; also try to divide bt 58 to get distance in centimeters
 }
 
+//Output 8 bit char to UART
 void OUTA_UART(unsigned char data){
 
     // wait for the transmit buffer to be empty before sending data
