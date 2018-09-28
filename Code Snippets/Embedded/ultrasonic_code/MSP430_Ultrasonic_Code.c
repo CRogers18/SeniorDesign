@@ -1,4 +1,4 @@
-#include "msp430.h"
+#include "msp430fr5969.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -19,60 +19,80 @@ int main(void)
     PM5CTL0 &= ~LOCKLPM5;
 
     // Configure GPIO for the Bluetooth module
-    P2SEL1 |= BIT5 | BIT6;
+    P2SEL1 |= (BIT5 | BIT6);
     P2SEL0 &= ~(BIT5 | BIT6);
 
     //Configure GPIO for the ultrasonic
     //Trigger is an output
     P1DIR |= BIT5;
+    P1SEL0 = ~BIT0;
+    P1SEL1 = ~BIT0;
     P1OUT &= ~BIT5;     //Set to low to wait for initiation
 
     //Echo is an input
     P1DIR &= ~(BIT6);
-    P1SEL = BIT6;   //Sets this for the timer to work with it
+    P1IN &= ~BIT6;
+    P1SEL0 = BIT1;   //Sets this for the timer to work with it
+    P1SEL1 = BIT1;
 
-    init_UART();
+    //init_UART();
 
     //Set up the Timer_A0 interrupts
     //Didnt set up capture input
-    TA0CCTL0 |= CM_3 + SCS + CAP + CCIE + CCIS_0;
+    TA0CCTL0 = CM_3 | SCS | CCIE | CAP | CCIS_0;
     //CCTL0 |= CM_3 + SCS + CCIS_0 + CAP + CCIE;
 
-    TA0CTL |= TASSEL_2 + MC_2 + ID_0;
-
-    ultrasonic_ping();
-
-    printf("The distance is: %x", distance_cm);
-    fflush(stdout);
+    TA0CTL = TASSEL_0 | MC_2 | ID_3 | TAIE;
 
     __bis_SR_register(GIE); // Enter LPM3, interrupts enabled
-    __no_operation();                   // For debugger
+    //__no_operation();                   // For debugger
+
+    for(;;){
+        ultrasonic_ping();
+
+        printf("The distance is: %x\n", distance_cm);
+        fflush(stdout);
+    }
+
+
 }
 
 //Trigger is set to high, wait 10us, set low
 //Read from echo to get the time
 void ultrasonic_ping() {
 
+    //Clear the echo pin, DOES THIS DO ANYTHING?
+    //P1IN &= ~BIT6;
+
+    printf("The echo STARTS with %x\n ", P1IN);
+    fflush(stdout);
     //Ping the trigger
     P1OUT ^= BIT5;  // drive connected pin high
+//    printf("Pin out is %x\n", P1OUT);
+//    fflush(stdout);
 
     //delay 10us or 10 cycles at 1 MHz
     __delay_cycles(10); // bad way to do delay, should use timer w/ interrupts for low-power
     P1OUT ^= BIT5;  // drive connected pin low
+//    printf("Pin out is %x\n", P1OUT);
+//    fflush(stdout);
+
     __delay_cycles(60000);
+    printf("The echo ends with %x\n ", P1IN);
+    fflush(stdout);
     //ping the echo
     //P1DIR ^= (BIT6);  // set connected pin to input - 0 is input
 
     // wait 50ms with timer interrupts here
     //Need to set up Timer Control, Timer Compare Control, and the hardcoded time for the delay
 
-    // timer PWM configuration needed to measure pulse duration
-    float pulseDuration;
-
-    // hand-off data to array, division op will be done on phone app, send raw data over UART
-    sensorData[0] = pulseDuration;
-
-    floatToBuffer(sensorData[0]);
+//    // timer PWM configuration needed to measure pulse duration
+//    float pulseDuration;
+//
+//    // hand-off data to array, division op will be done on phone app, send raw data over UART
+//    sensorData[0] = pulseDuration;
+//
+//    floatToBuffer(sensorData[0]);
 
     //distance = duration / 296; also try to divide bt 58 to get distance in centimeters
     //Alternate equation for cm
@@ -171,37 +191,24 @@ void __attribute__ ((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
     }
 }
 
-
-
-#pragma vector=TIMERA0_VECTOR
-__interrupt void TimerA0(void)
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void Timer0_A0(void)
 {
     printf("We out here\n");
     fflush(stdout);
-
-
 
     if (TA0CCTL0 & CCI)            // Raising edge
     {
         up_counter = TA0CCR0;      // Copy counter to variable
     }
 
-
-
     else                        // Falling edge
     {
         // Formula: Distance in cm = (Time in uSec)/58
         distance_cm = (TA0CCR0 - up_counter)/58;
     }
-    printf("The up counter is: %x", up_counter);
+
+    printf("The up counter is: %x\n", up_counter);
         fflush(stdout);
     TA0CTL &= ~TAIFG;           // Clear interrupt flag - handled
 }
-
-
-
-
-
-
-
-
