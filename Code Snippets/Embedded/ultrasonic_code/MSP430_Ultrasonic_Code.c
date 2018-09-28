@@ -1,53 +1,82 @@
 #include "msp430.h"
 #include <stdint.h>
+#include <stdio.h>
 
 //Holds Accelerometer and Ultrasonic information
 float sensorData[6] = {0};
+unsigned int up_counter;
+unsigned int distance_cm;
+
+void ultrasonic_ping();
+void init_UART();
 
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD; //Stop Watchdog
+    WDTCTL = WDTPW | WDTHOLD; //Stop Watchdog
 
-	// Configure GPIO for the Bluetooth module
-	P2SEL1 |= BIT5 | BIT6;         
-	P2SEL0 &= ~(BIT5 | BIT6);
+    // Disable the GPIO power-on default high-impedance mode to activate
+    // previously configured port settings
+    PM5CTL0 &= ~LOCKLPM5;
 
-	//Configure GPIO for the ultrasonic
+    // Configure GPIO for the Bluetooth module
+    P2SEL1 |= BIT5 | BIT6;
+    P2SEL0 &= ~(BIT5 | BIT6);
 
-	// Disable the GPIO power-on default high-impedance mode to activate
-	// previously configured port settings
-	PM5CTL0 &= ~LOCKLPM5;
+    //Configure GPIO for the ultrasonic
+    //Trigger is an output
+    P1DIR |= BIT5;
+    P1OUT &= ~BIT5;     //Set to low to wait for initiation
 
-	init_UART();
+    //Echo is an input
+    P1DIR &= ~(BIT6);
+    P1SEL = BIT6;   //Sets this for the timer to work with it
 
-	__bis_SR_register(LPM3_bits | GIE); // Enter LPM3, interrupts enabled
-	__no_operation();					// For debugger
+    init_UART();
+
+    //Set up the Timer_A0 interrupts
+    //Didnt set up capture input
+    TA0CCTL0 |= CM_3 + SCS + CAP + CCIE + CCIS_0;
+    //CCTL0 |= CM_3 + SCS + CCIS_0 + CAP + CCIE;
+
+    TA0CTL |= TASSEL_2 + MC_2 + ID_0;
+
+    ultrasonic_ping();
+
+    printf("The distance is: %x", distance_cm);
+    fflush(stdout);
+
+    __bis_SR_register(GIE); // Enter LPM3, interrupts enabled
+    __no_operation();                   // For debugger
 }
 
+//Trigger is set to high, wait 10us, set low
+//Read from echo to get the time
 void ultrasonic_ping() {
 
-	//Ping the echo
-	P1DIR |= 0x01;  // set connected pin to output - 1 is output
-	P1OUT ^= 0x01;  // drive connected pin high
+    //Ping the trigger
+    P1OUT ^= BIT5;  // drive connected pin high
 
-	//delay 10us or 10 cycles at 1 MHz
-	__delay_cycles(10); // bad way to do delay, should use timer w/ interrupts for low-power
-	P1OUT ^= 0x01;  // drive connected pin low
+    //delay 10us or 10 cycles at 1 MHz
+    __delay_cycles(10); // bad way to do delay, should use timer w/ interrupts for low-power
+    P1OUT ^= BIT5;  // drive connected pin low
+    __delay_cycles(60000);
+    //ping the echo
+    //P1DIR ^= (BIT6);  // set connected pin to input - 0 is input
 
-	//ping the trigger
-	P1DIR &= ~(0x01);  // set connected pin to input - 0 is input
+    // wait 50ms with timer interrupts here
+    //Need to set up Timer Control, Timer Compare Control, and the hardcoded time for the delay
 
-	// wait 50ms with timer interrupts here
-	//Need to set up Timer Control, Timer Compare Control, and the hardcoded time for the delay
+    // timer PWM configuration needed to measure pulse duration
+    float pulseDuration;
 
-	// timer PWM configuration needed to measure pulse duration
-	float pulseDuration;
+    // hand-off data to array, division op will be done on phone app, send raw data over UART
+    sensorData[0] = pulseDuration;
 
-	// hand-off data to array, division op will be done on phone app, send raw data over UART
-	sensorData[0] = pulseDuration;
+    floatToBuffer(sensorData[0]);
 
-	floatToBuffer(sensorData[0]);
-	//distance = duration / 296; also try to divide bt 58 to get distance in centimeters
+    //distance = duration / 296; also try to divide bt 58 to get distance in centimeters
+    //Alternate equation for cm
+    //distance = ( (duration * 340) / 100 ) / 2
 }
 
 //Output 8 bit char to UART
@@ -62,61 +91,61 @@ void OUTA_UART(unsigned char data){
 }
 
 void init_UART(){
-	// Startup clock system with max DCO setting ~8MHz
-	CSCTL0_H = CSKEY >> 8;                    // Unlock clock registers
-	CSCTL1 = DCOFSEL_3 | DCORSEL;             // Set DCO to 8MHz
-	CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;
-	CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // Set all dividers
-	CSCTL0_H = 0;                             // Lock CS registers
+    // Startup clock system with max DCO setting ~8MHz
+    CSCTL0_H = CSKEY >> 8;                    // Unlock clock registers
+    CSCTL1 = DCOFSEL_3 | DCORSEL;             // Set DCO to 8MHz
+    CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;
+    CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // Set all dividers
+    CSCTL0_H = 0;                             // Lock CS registers
 
-	// Configure USCI_A0 for UART mode
-	UCA1CTLW0 = UCSWRST;                      // Put eUSCI in reset
-	UCA1CTLW0 |= UCSSEL__SMCLK;               // CLK = SMCLK
-	// Baud Rate calculation
-	// 8000000/(16*9600) = 52.083
-	// Fractional portion = 0.083
-	// User's Guide Table 21-4: UCBRSx = 0x04
-	// UCBRFx = int ( (52.083-52)*16) = 1
-	UCA1BR0 = 52;                             // 8000000/16/9600
-	UCA1BR1 = 0x00;
-	UCA1MCTLW |= UCOS16 | UCBRF_1;
-	UCA1CTLW0 &= ~UCSWRST;                    // Initialize eUSCI
-	UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
+    // Configure USCI_A0 for UART mode
+    UCA1CTLW0 = UCSWRST;                      // Put eUSCI in reset
+    UCA1CTLW0 |= UCSSEL__SMCLK;               // CLK = SMCLK
+    // Baud Rate calculation
+    // 8000000/(16*9600) = 52.083
+    // Fractional portion = 0.083
+    // User's Guide Table 21-4: UCBRSx = 0x04
+    // UCBRFx = int ( (52.083-52)*16) = 1
+    UCA1BR0 = 52;                             // 8000000/16/9600
+    UCA1BR1 = 0x00;
+    UCA1MCTLW |= UCOS16 | UCBRF_1;
+    UCA1CTLW0 &= ~UCSWRST;                    // Initialize eUSCI
+    UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
 }
 
 //Converts float to 4 different 8 bit data points to be sent
 //over UART
 void floatToBuffer(float data)
 {
-	//Gets the binary representation of a float
-	union
-	{
-		float    floatData;
-		uint32_t bitData;
-	} pun = { .floatData = data };
+    //Gets the binary representation of a float
+    union
+    {
+        float    floatData;
+        uint32_t bitData;
+    } pun = { .floatData = data };
 
-	//Mask allows us to gather 8 bits at a time
-	uint32_t mask = 0xFF000000;
-	uint32_t val;
-	int i;
-	uint8_t c;
+    //Mask allows us to gather 8 bits at a time
+    uint32_t mask = 0xFF000000;
+    uint32_t val;
+    int i;
+    uint8_t c;
 
-	//Evalutes from MSB to LSB
-	for(i = 3; i > -1; i--)
-	{
-	    // Get 8 bits of MSB
-	    uint32_t val = (pun.bitData & mask);
+    //Evalutes from MSB to LSB
+    for(i = 3; i > -1; i--)
+    {
+        // Get 8 bits of MSB
+        uint32_t val = (pun.bitData & mask);
 
-	    val >>= (i*8);
+        val >>= (i*8);
 
-	    // printBits(sizeof(val), &val);
-	    mask >>= 8;
-	    c = (uint8_t) val;
-	    OUTA_UART(c);
-	}
+        // printBits(sizeof(val), &val);
+        mask >>= 8;
+        c = (uint8_t) val;
+        OUTA_UART(c);
+    }
 
-	//Is this necessary?
-	OUTA_UART('\n');
+    //Is this necessary?
+    OUTA_UART('\n');
 }
 
 //USCI_A1 Interrupt Vector - Operates on a transmission recieve from UART
@@ -129,15 +158,50 @@ void __attribute__ ((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
 #error Compiler not supported!
 #endif
 {
-	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
-	{
-		case USCI_NONE: break;
-		case USCI_UART_UCRXIFG:
-		  //Code goes here
-		  __no_operation();
-		  break;
-		case USCI_UART_UCTXIFG: break;
-		case USCI_UART_UCSTTIFG: break;
-		case USCI_UART_UCTXCPTIFG: break;
-	}
+    switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
+    {
+        case USCI_NONE: break;
+        case USCI_UART_UCRXIFG:
+          //Code goes here
+          __no_operation();
+          break;
+        case USCI_UART_UCTXIFG: break;
+        case USCI_UART_UCSTTIFG: break;
+        case USCI_UART_UCTXCPTIFG: break;
+    }
 }
+
+
+
+#pragma vector=TIMERA0_VECTOR
+__interrupt void TimerA0(void)
+{
+    printf("We out here\n");
+    fflush(stdout);
+
+
+
+    if (TA0CCTL0 & CCI)            // Raising edge
+    {
+        up_counter = TA0CCR0;      // Copy counter to variable
+    }
+
+
+
+    else                        // Falling edge
+    {
+        // Formula: Distance in cm = (Time in uSec)/58
+        distance_cm = (TA0CCR0 - up_counter)/58;
+    }
+    printf("The up counter is: %x", up_counter);
+        fflush(stdout);
+    TA0CTL &= ~TAIFG;           // Clear interrupt flag - handled
+}
+
+
+
+
+
+
+
+
