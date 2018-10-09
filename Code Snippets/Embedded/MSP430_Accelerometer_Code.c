@@ -39,4 +39,7 @@ void init_I2C(){
 	UCB0CTLW0 |= 
 
 	//Setup CTLW1
+
+	//Setup STAT Register
+	
 }
