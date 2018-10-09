@@ -42,6 +42,7 @@ void init_I2C(){
 	UCB0CTLW0 |= UCMST | UCMODE0_3 | UCSYNC | UCSSEL0_3 | UCTXACK
 
 	//Setup CTLW1
+<<<<<<< HEAD
 	//Might not need to do this
 
 	UCBR0 = 12;	//SMCLK/12 = ~100KHz???
@@ -53,4 +54,9 @@ void init_I2C(){
 	//Disable UCSWRST
 	UCB0CTLW0 &= ~UCSWRST;
 
+=======
+
+	//Setup STAT Register
+	
+>>>>>>> 933646668594dd17e6a3bf48f4ff82de3a1b8f92
 }
