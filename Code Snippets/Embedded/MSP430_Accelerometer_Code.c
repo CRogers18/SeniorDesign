@@ -13,8 +13,25 @@ int main(void){
 
     WDTCTL = WDTPW | WDTHOLD;                 // Stop Watchdog
 
+    // Startup clock system with max DCO setting ~8MHz
+    CSCTL0_H = CSKEY >> 8;                    // Unlock clock registers
+    CSCTL1 = DCOFSEL_3 | DCORSEL;             // Set DCO to 8MHz
+    CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;
+    CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // Set all dividers
+    CSCTL0_H = 0;                             // Lock CS registers
+
     //Configure the pins for the Accelerometer
     init_I2C();
+
+    while (1)
+    {
+        while (UCB0CTLW0 & UCTXSTP);             // Ensure stop condition got sent
+        UCB0CTLW0 |= UCTXSTT;                    // I2C start condition
+        while (UCB0CTLW0 & UCTXSTT);             // Start condition sent?
+        UCB0CTLW0 |= UCTXSTP;                    // I2C stop condition
+        __bis_SR_register(LPM3);        // Enter LPM0 w/ interrupts
+
+    }
 
 }
 
@@ -42,12 +59,12 @@ void init_I2C(){
     //Set UCTXSTP to 0 - No STOP
     //Set UCTXSTT to 0 - No START
     //Dont mess with UCSWRST to 1
-    UCB0CTLW0 |= UCMST | UCMODE_3 | UCSYNC | UCSSEL_3;// | UCTXACK;
+    UCB0CTLW0 |= UCMST | UCMODE_3 | UCSYNC | UCSSEL_2;// | UCTXACK;
 
     //Setup CTLW1
     //Might not need to do this
 
-    UCB0BR0 = 12; //SMCLK/12 = ~100KHz???
+    UCB0BRW = 80; //SMCLK/80 = ~100KHz???
 
     //Slave Address - Do I need to declare this
     //Figure out the slave address
@@ -58,16 +75,6 @@ void init_I2C(){
 
     //Enable interrupt
     UCB0IE |= UCRXIE1;
-
-    while (1)
-    {
-        while (UCB0CTL1 & UCTXSTP);             // Ensure stop condition got sent
-        UCB0CTL1 |= UCTXSTT;                    // I2C start condition
-        while (UCB0CTL1 & UCTXSTT);             // Start condition sent?
-        UCB0CTL1 |= UCTXSTP;                    // I2C stop condition
-        __bis_SR_register(LPM3);        // Enter LPM0 w/ interrupts
-
-    }
 }
 
 #pragma vector = USCI_I2C_UCRXIFG0
@@ -75,3 +82,14 @@ __interrupt void Accelerometer_Interrupt(void){
     printf("check");
     fflush(stdout);
 }
+
+
+
+
+
+
+
+
+
+
+
