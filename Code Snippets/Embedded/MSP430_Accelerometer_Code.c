@@ -25,7 +25,7 @@ int main(void){
 
     while (1)
     {
-        while (UCB0CTLW0 & UCTXSTP);             // Ensure stop condition got sent
+        //while (UCB0CTLW0 & UCTXSTP);             // Ensure stop condition got sent
         UCB0CTLW0 |= UCTXSTT;                    // I2C start condition
         while (UCB0CTLW0 & UCTXSTT);             // Start condition sent?
         UCB0CTLW0 |= UCTXSTP;                    // I2C stop condition
@@ -59,7 +59,7 @@ void init_I2C(){
     //Set UCTXSTP to 0 - No STOP
     //Set UCTXSTT to 0 - No START
     //Dont mess with UCSWRST to 1
-    UCB0CTLW0 |= UCMST | UCMODE_3 | UCSYNC | UCSSEL_2;// | UCTXACK;
+    UCB0CTLW0 |= UCMST | UCMODE_3 | UCSYNC | UCSSEL_2 | UCSWRST;// | UCTXACK;
 
     //Setup CTLW1
     //Might not need to do this
@@ -68,13 +68,13 @@ void init_I2C(){
 
     //Slave Address - Do I need to declare this
     //Figure out the slave address
-    //UCB0I2CSA = 0x1D;
+    UCB0I2CSA = 0x1D;
 
     //Disable UCSWRST
     UCB0CTLW0 &= ~UCSWRST;
 
     //Enable interrupt
-    UCB0IE |= UCRXIE1;
+    //UCB0IE |= UCRXIE1;
 }
 
 #pragma vector = USCI_I2C_UCRXIFG0
