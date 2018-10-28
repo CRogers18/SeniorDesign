@@ -30,7 +30,8 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".BackUpCamera" />
         <activity android:name=".bluetoothLearning" />
-        <activity android:name=".BluetoothActivity"></activity>
+        <activity android:name=".BluetoothActivity" />
+        <activity android:name=".DemoActivity"></activity>
     </application>
 
 </manifest>

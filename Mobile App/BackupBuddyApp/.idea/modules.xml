@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BackupBuddyApp.iml" filepath="$PROJECT_DIR$/BackupBuddyApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mjpegviewer_v1.0.4/mjpegviewer_v1.0.4.iml" filepath="$PROJECT_DIR$/mjpegviewer_v1.0.4/mjpegviewer_v1.0.4.iml" />
     </modules>
   </component>
 </project>

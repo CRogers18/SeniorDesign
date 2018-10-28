@@ -42,4 +42,14 @@
         android:layout_alignTop="@id/send"
         android:layout_toLeftOf="@id/send"
         android:text="Close" />
+
+    <TextView
+        android:id="@+id/label2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/close"
+        android:text="This be the data:" />
+
+
+
 </RelativeLayout>

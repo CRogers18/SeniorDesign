@@ -42,11 +42,14 @@ public class MainMenuActivity extends AppCompatActivity {
             char[] wakeCmd = {'W', 'W', 'W', 'W', 'W'};
 
             // transmit wakeCmd w/ bluetooth here
-           // Intent cameraFeedIntent = new Intent(MainMenuActivity.this, BackUpCamera.class);
+            //Intent cameraFeedIntent = new Intent(MainMenuActivity.this, BackUpCamera.class);
            // MainMenuActivity.this.startActivity(cameraFeedIntent);
 
-            Intent bluetoothFun = new Intent(MainMenuActivity.this, BluetoothActivity.class);
-           MainMenuActivity.this.startActivity(bluetoothFun);
+           // Intent bluetoothFun = new Intent(MainMenuActivity.this, BluetoothActivity.class);
+          // MainMenuActivity.this.startActivity(bluetoothFun);
+
+            Intent demo = new Intent(MainMenuActivity.this, DemoActivity.class);
+            MainMenuActivity.this.startActivity(demo);
 
 
         });
