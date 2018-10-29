@@ -26,10 +26,6 @@ import java.util.ArrayList;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 
-
-
-
-
 public class BluetoothActivity extends Activity
 {
     TextView myLabel;
@@ -58,7 +54,7 @@ public class BluetoothActivity extends Activity
         int dist_1, dist_2, dist_3;
         float accel_x, accel_y, accel_z;
 
-        // Instantiate the class with data and the text is automatically updated
+        // Instantiate the class with data and the text is automatically updated in the UI
         public TMFrame(byte[] packetData)
         {
             int[] dataConvert = (int) packetData;
@@ -67,72 +63,23 @@ public class BluetoothActivity extends Activity
             this.dist_2 = (dataConvert[2] << 8) | dataConvert[3];
             this.dist_3 = (dataConvert[4] << 8) | dataConvert[5];
 
-            int bitmask = 0x40;
+            this.accel_x = (dataConvert[6] << 8) | dataConvert[7];
+            this.accel_y = (dataConvert[8] << 8) | dataConvert[9];
+            this.accel_z = (dataConvert[10] << 8) | dataConvert[11];
 
-            for(int i = 6; i < 9; i++)
+            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+                                       Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+
+            runOnUiThread(() ->
             {
-                int result = 0;
-                int decimal = 0;
-
-                for(int j = 6; j > -1; j--)
-                {
-                    if(packetData[i] & bitmask)
-                    {
-                        if(j == 6)
-                            result += 1;
-
-                        if(j == 5)
-                            decimal += 5000;
-
-                        if(j == 4)
-                            decimal += 2500;
-
-                        if(j == 3)
-                            decimal += 1250;
-
-                        if(j == 2)
-                            decimal += 625;
-
-                        if(j == 1)
-                            decimal += 312;
-
-                        if(j == 0)
-                            decimal += 156;
-                    }
-
-                    bitmask >>= 1;
-                }
-
-                result += decimal;
-
-                // Check sign
-                if(packetData[7] & 0x80)
-                    result *= -1;
-
-                if(i == 6)
-                    this.accel_x = (float) result;
-
-                if(i == 7)
-                    this.accel_y = (float) result;
-
-                if(i == 8)
-                    this.accel_z = (float) result;
-            }
-
-            // Note: may throw errors about variables not being final, just make new variable if case
-            runOnUiThread(() -> 
-            {
-                updateText(Integer.toString(dist_1));
-                updateText(Integer.toString(dist_2));
-                updateText(Integer.toString(dist_3));
-                updateText(Float.toString(accel_x));
-                updateText(Float.toString(accel_y));
-                updateText(Float.toString(accel_z));
+                for(int i = 0; i < 6; i++)
+                    updateText(strVals[i]);
             });
         }
     }
 
-    public static int unsignedToBytes(byte b) {
+    public static int unsignedToBytes(byte b) 
+    {
         return b & 0xFF;
     }
 
@@ -249,7 +196,7 @@ public class BluetoothActivity extends Activity
         ArrayList<String> myStringArray1 = new ArrayList<String>();
 
         readBufferPosition = 0;
-        readBuffer = new byte[20];  // at least 12 bytes wide for 5 16-bit values
+        readBuffer = new byte[24];  // at least 12 bytes wide for 5 16-bit values
         
         workerThread = new Thread(new Runnable()
         {
@@ -264,8 +211,11 @@ public class BluetoothActivity extends Activity
                         // A full TM frame is ready
                         if(bytesAvailable >= 12)
                         {
-
+                            TMFrame f = new TMFrame(readBuffer);
+                            readBuffer.clear();
                         }
+
+                        /*
 
                         if(bytesAvailable > 0)
                         {
@@ -385,6 +335,7 @@ public class BluetoothActivity extends Activity
                                 }
                             }
                         }
+                        */
                     }
 
                     catch (IOException ex)
