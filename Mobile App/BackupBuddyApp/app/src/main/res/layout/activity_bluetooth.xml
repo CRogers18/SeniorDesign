@@ -9,7 +9,8 @@
         android:id="@+id/label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Type here:" />
+        android:text="Type here:"
+        android:textSize="29sp" />
 
     <EditText
         android:id="@+id/entry"
@@ -48,7 +49,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/close"
-        android:text="This be the data:" />
+        android:text="This be the data:"
+        android:textSize="32sp" />
 
 
 

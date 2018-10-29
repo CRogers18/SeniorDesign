@@ -54,7 +54,7 @@ public class BluetoothActivity extends Activity
     float Val;
     int byteCount = 0;
     int[] byteBuffer = new int[4];
-    byte[] byteBuffer2 = new byte[4];
+    byte[] byteBuffer2 = new byte[120];
 
     int counter2 = 0;
 
@@ -78,17 +78,20 @@ public class BluetoothActivity extends Activity
 
             System.out.println("Data1: " + dataConvert[1] + " Data0: " + dataConvert[0]);
             dist_1 = ((dataConvert[1] << 8) | dataConvert[0]) / 58;
+            System.out.println("Data1: " + dataConvert[3] + " Data0: " + dataConvert[2]);
 
-//            dist_2 = (dataConvert[2] << 8) | dataConvert[3];
-//            dist_3 = (dataConvert[4] << 8) | dataConvert[5];
-//
+            dist_2 = ((dataConvert[3] << 8) | dataConvert[2]) / 58;
+            System.out.println("Data1: " + dataConvert[5] + " Data0: " + dataConvert[2]);
+
+            dist_3 = ((dataConvert[5] << 8) | dataConvert[4]) / 58;
+
 //            accel_x = (dataConvert[6] << 8) | dataConvert[7];
 //            accel_y = (dataConvert[8] << 8) | dataConvert[9];
 //            accel_z = (dataConvert[10] << 8) | dataConvert[11];
-//
+
 //            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
 //                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
-            final String[] strVals = {Integer.toString(dist_1)};
+            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 
             runOnUiThread(() -> updateText(strVals) );
         }
@@ -199,7 +202,7 @@ public class BluetoothActivity extends Activity
 
     void updateText(String[] a)
     {
-        floatvalshow.setText("Center: " + a[0]);
+        floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2]);
 
     }
     void beginListenForData()
@@ -216,28 +219,20 @@ public class BluetoothActivity extends Activity
         {
             public void run()
             {
-                System.out.println("you make it in here fam");
-                System.out.println("StopWorker Value: " + stopWorker);
-                System.out.println(" Thread.currentThread: " + Thread.currentThread().isInterrupted());
+
                 while(!Thread.currentThread().isInterrupted() && !stopWorker)
                 {
-                    //System.out.println("While");
                     try
                     {
-                        //System.out.println("yeah I tried and made it");
                         int bytesAvailable = mmInputStream.available();
 
                         if(bytesAvailable > 0)
                         {
-                            //System.out.println("yeah I tried and made it to bytesAvailable");
-                            //System.out.println("First time value: " + testme);
 
                             byte[] packetBytes = new byte[bytesAvailable];
                             mmInputStream.read(packetBytes);
 
-                           // bytesAvailable = 4
 
-                           // TMFrame f = new TMFrame(packetBytes);
 
                             for(int i=0;i<bytesAvailable;i++)
                             {
@@ -255,14 +250,17 @@ public class BluetoothActivity extends Activity
                                 byteCount++;
 
                                 //System.out.println("val: = " + Val);
-                                byte b = packetBytes[i];
-                                if(byteCount > 2)
+                                if(packetBytes[i] == 0x1f)
+                                {
+                                    System.out.println("eat my whole ass");
+                                    byteCount = 0;
+                                }
+
+
+                                if(byteCount > 6)
                                 {
                                     byteCount = 0;
-                                    //System.out.println("bef");
 
-
-                                    readBufferPosition = 0;
                                     TMFrame p = new TMFrame(byteBuffer2);
 
                                 }
