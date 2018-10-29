@@ -48,6 +48,8 @@ import java.sql.SQLSyntaxErrorException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 
@@ -88,7 +90,8 @@ public class DemoActivity extends AppCompatActivity {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null)
         {
-            myLabel.setText("No bluetooth adapter available");
+            //myLabel.setText("No bluetooth adapter available");
+            System.out.println("No bluetooth adapter available");
         }
 
         if(!mBluetoothAdapter.isEnabled())
@@ -442,7 +445,8 @@ public class DemoActivity extends AppCompatActivity {
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-        myLabel.setText("Bluetooth Closed");
+       // myLabel.setText("Bluetooth Closed");
+        System.out.println("Bluetooth closed");
     }
 
     private static final int TIMEOUT = 20;
@@ -457,6 +461,9 @@ public class DemoActivity extends AppCompatActivity {
     TextView left;
     TextView right;
     TextView center;
+    Button exit;
+    Button bluetooth;
+
 
 
     //WebView webView;
@@ -479,6 +486,8 @@ public class DemoActivity extends AppCompatActivity {
         left = (TextView)findViewById(R.id.left);
         right = (TextView)findViewById(R.id.right);
         center = (TextView)findViewById(R.id.center);
+        exit = (Button)findViewById(R.id.Exit);
+        bluetooth = (Button)findViewById(R.id.bluetooth);
 
         //distancetoback.setText("what");
         // distancetoback.setBackgroundColor()
@@ -489,20 +498,66 @@ public class DemoActivity extends AppCompatActivity {
 //        viewer.setUrl("http://192.168.4.1:8080/?action=stream");
 //        viewer.startStream();
 
-        try
-        {
-            findBT();
-            openBT();
-        }
-        catch (IOException ex) { }
+        exit.setOnClickListener(new View.OnClickListener() {
 
-//
+            @Override
+            public void onClick(View view) {
+                try {
+                    if(mmOutputStream != null && mmInputStream!=null && mmSocket!= null)
+                    closeBT();
+                }
+                catch (IOException ex) { }
+
+                Intent Home = new Intent(DemoActivity.this, MainMenuActivity.class);
+                DemoActivity.this.startActivity(Home);
+            }
+        });
+
+        bluetooth.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                try
+                {
+                    findBT();
+                    openBT();
+                }
+                catch (IOException ex) { }
+
+                try
+                {
+                    if(mmOutputStream != null)
+                    {
+                        sendData();
+                    }
+
+                }
+                catch (IOException ex) { }
+
+
+            }
+        });
+//        try
+//        {
+//            findBT();
+//            openBT();
+//        }
+//        catch (IOException ex) { }
+
+        // use this to make another view that counts down from 10 or so for the pi to boot
+//        try {
+//            TimeUnit.SECONDS.sleep(4);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+
 //        try
 //        {
 //            sendData();
 //        }
 //        catch (IOException ex) { }
-//
+
 
         Mjpeg.newInstance()
                 .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)

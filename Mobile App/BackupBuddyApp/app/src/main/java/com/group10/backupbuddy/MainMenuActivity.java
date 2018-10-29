@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
     ImageView wakeBtn, settings;
     TextView mainText;
+    Button debug;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +39,15 @@ public class MainMenuActivity extends AppCompatActivity {
         wakeBtn = (ImageView) findViewById(R.id.wakeButton);
         settings = (ImageView) findViewById(R.id.settingIcon);
         mainText = (TextView) findViewById(R.id.mainText);
+        debug = (Button) findViewById(R.id.debugMe);
 
-        wakeBtn.setOnClickListener(e -> {
+        debug.setOnClickListener(e -> {
+             Intent bluetoothFun = new Intent(MainMenuActivity.this, BluetoothActivity.class);
+             MainMenuActivity.this.startActivity(bluetoothFun);
+
+        });
+
+            wakeBtn.setOnClickListener(e -> {
 
             char[] wakeCmd = {'W', 'W', 'W', 'W', 'W'};
 
