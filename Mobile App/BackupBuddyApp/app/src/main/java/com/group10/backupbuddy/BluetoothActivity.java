@@ -48,6 +48,11 @@ public class BluetoothActivity extends Activity
     int counter;
     volatile boolean stopWorker;
     TextView floatvalshow;
+    TextView value1;
+    TextView value2;
+    TextView value3;
+
+
     ListView myListView;
     ArrayAdapter<String> adapter;
     long testme;
@@ -76,14 +81,26 @@ public class BluetoothActivity extends Activity
                 dataConvert[i] = (int)packetData[i] & 0xff;
             }
 
-            System.out.println("Data1: " + dataConvert[1] + " Data0: " + dataConvert[0]);
-            dist_1 = ((dataConvert[1] << 8) | dataConvert[0]) / 58;
-            System.out.println("Data1: " + dataConvert[3] + " Data0: " + dataConvert[2]);
 
-            dist_2 = ((dataConvert[3] << 8) | dataConvert[2]) / 58;
-            System.out.println("Data1: " + dataConvert[5] + " Data0: " + dataConvert[2]);
+          //  System.out.println("Data1: " + dataConvert[1] + " Data0: " + dataConvert[0]);
+          //  System.out.println("before divide: " + (((dataConvert[0] )<< 8) | dataConvert[1]));
+            //System.out.println("Second before divide: " + (((dataConvert[1] )<< 8) | dataConvert[0]));
 
-            dist_3 = ((dataConvert[5] << 8) | dataConvert[4]) / 58;
+            dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+            //float whatever = (float)dist_1 / (float)58;
+            //dist_1 = whatever;
+            //System.out.println("whatever: " + whatever);
+
+           // System.out.println("Data3: " + dataConvert[3] + " Data2: " + dataConvert[2]);
+           // System.out.println("Val1: " + dist_1);
+
+            dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+//            System.out.println("Data5: " + dataConvert[5] + " Data4: " + dataConvert[4]);
+//            System.out.println("Val2: " + dist_2);
+//
+//
+            dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+//            System.out.println("Val3: " + dist_3);
 
 //            accel_x = (dataConvert[6] << 8) | dataConvert[7];
 //            accel_y = (dataConvert[8] << 8) | dataConvert[9];
@@ -91,8 +108,8 @@ public class BluetoothActivity extends Activity
 
 //            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
 //                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
-            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
-
+           final String[] strVals = { Float.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
+//final String[] strVals = {Integer.toString(dist_1)};
             runOnUiThread(() -> updateText(strVals) );
         }
     }
@@ -202,7 +219,16 @@ public class BluetoothActivity extends Activity
 
     void updateText(String[] a)
     {
-        floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2]);
+        floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
+        if(!a[0].equals("0") || Integer.parseInt(a[0]) < 150 )
+            value1.setText(a[0]);
+
+        if(!a[1].equals("0") || Integer.parseInt(a[1]) < 150 )
+            value2.setText(a[1]);
+
+        if(!a[2].equals("0")|| Integer.parseInt(a[2]) < 150 )
+            value3.setText(a[2]);
+
 
     }
     void beginListenForData()
@@ -215,10 +241,12 @@ public class BluetoothActivity extends Activity
 
         readBufferPosition = 0;
         readBuffer = new byte[1024];
+
         workerThread = new Thread(new Runnable()
         {
             public void run()
             {
+                boolean didI = false;
 
                 while(!Thread.currentThread().isInterrupted() && !stopWorker)
                 {
@@ -236,7 +264,7 @@ public class BluetoothActivity extends Activity
 
                             for(int i=0;i<bytesAvailable;i++)
                             {
-                                //System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
+                                System.out.println("packetBytes[" + i + "]:  "+ Integer.toHexString(packetBytes[i]));
 
 
                                // System.out.print("ByteCount: " + byteCount);
@@ -252,13 +280,15 @@ public class BluetoothActivity extends Activity
                                 //System.out.println("val: = " + Val);
                                 if(packetBytes[i] == 0x1f)
                                 {
+                                    didI = true;
                                     System.out.println("eat my whole ass");
                                     byteCount = 0;
                                 }
 
 
-                                if(byteCount > 6)
+                                if(byteCount > 5 && didI)
                                 {
+                                    didI = false;
                                     byteCount = 0;
 
                                     TMFrame p = new TMFrame(byteBuffer2);

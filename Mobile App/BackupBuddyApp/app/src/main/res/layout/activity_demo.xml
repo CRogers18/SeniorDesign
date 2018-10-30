@@ -16,8 +16,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         stream:type="stream_default" />
 
     <TextView
@@ -53,16 +55,17 @@
         android:id="@+id/left"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginBottom="7dp"
         android:layout_marginEnd="1dp"
         android:background="@android:color/holo_red_dark"
         android:text="OFF"
         android:textAlignment="center"
         android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="@+id/center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/center"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/center" />
+        app:layout_constraintTop_toBottomOf="@+id/bluetooth" />
 
     <Button
         android:id="@+id/Exit"
@@ -80,9 +83,51 @@
         android:id="@+id/bluetooth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="198dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="Bluetooth"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintBottom_toTopOf="@+id/left"
+        app:layout_constraintEnd_toStartOf="@+id/value2overt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/value1overt"
+        android:layout_width="193dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:background="#80ff0004"
+        android:rotation="-22"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.682" />
+
+    <View
+        android:id="@+id/value2overt"
+        android:layout_width="161dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="195dp"
+        android:background="#80ff0004"
+        app:layout_constraintBottom_toBottomOf="@+id/value3overt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bluetooth"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.765" />
+
+    <View
+        android:id="@+id/value3overt"
+        android:layout_width="151dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="184dp"
+        android:background="#80ff0004"
+        android:rotation="22"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.866"
+        app:layout_constraintStart_toEndOf="@+id/value1overt"
+        app:layout_constraintTop_toTopOf="@+id/VIEW_NAME" />
 
 
 </android.support.constraint.ConstraintLayout>
