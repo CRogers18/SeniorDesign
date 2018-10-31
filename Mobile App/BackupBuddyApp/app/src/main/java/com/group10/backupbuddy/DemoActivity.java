@@ -66,6 +66,7 @@ public class DemoActivity extends AppCompatActivity {
     OutputStream mmOutputStream;
     InputStream mmInputStream;
     Thread workerThread;
+    Thread testing;
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
@@ -78,12 +79,107 @@ public class DemoActivity extends AppCompatActivity {
     int byteCount = 0;
     int[] byteBuffer = new int[4];
     int counter2 = 0;
+    byte[] byteBuffer2 = new byte[120];
 
 
+    public class TMFrame
+    {
+        int dist_1, dist_2, dist_3;
+        float accel_x, accel_y, accel_z;
+
+        // Instantiate the class with data and the text is automatically updated in the UI
+        public TMFrame(byte[] packetData)
+        {
+
+            int[] dataConvert = new int[packetData.length];
+
+
+            for(int i = 0; i < packetData.length; i++)
+            {
+                dataConvert[i] = (int)packetData[i] & 0xff;
+            }
+
+
+            //  System.out.println("Data1: " + dataConvert[1] + " Data0: " + dataConvert[0]);
+            //  System.out.println("before divide: " + (((dataConvert[0] )<< 8) | dataConvert[1]));
+            //System.out.println("Second before divide: " + (((dataConvert[1] )<< 8) | dataConvert[0]));
+
+            dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+            //float whatever = (float)dist_1 / (float)58;
+            //dist_1 = whatever;
+            //System.out.println("whatever: " + whatever);
+
+            // System.out.println("Data3: " + dataConvert[3] + " Data2: " + dataConvert[2]);
+            // System.out.println("Val1: " + dist_1);
+
+            dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+//            System.out.println("Data5: " + dataConvert[5] + " Data4: " + dataConvert[4]);
+//            System.out.println("Val2: " + dist_2);
+//
+//
+            dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+//            System.out.println("Val3: " + dist_3);
+
+//            accel_x = (dataConvert[6] << 8) | dataConvert[7];
+//            accel_y = (dataConvert[8] << 8) | dataConvert[9];
+//            accel_z = (dataConvert[10] << 8) | dataConvert[11];
+
+//            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+//                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
+//final String[] strVals = {Integer.toString(dist_1)};
+            runOnUiThread(() -> updateText(strVals) );
+        }
+    }
+    void updateText(String[] a)
+    {
+        //floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
+
+        if(a[0] != "0")
+            left.setText(a[0]);
+        if(a[1] != "0")
+            right.setText(a[1]);
+        if(a[2] != "0")
+            center.setText(a[2]);
+
+//        if(!a[0].equals("0") || Integer.parseInt(a[0]) < 150 )
+//            left.setText(a[0]);
+//
+//        if(!a[1].equals("0") || Integer.parseInt(a[1]) < 150 )
+//            right.setText(a[1]);
+//
+//        if(!a[2].equals("0")|| Integer.parseInt(a[2]) < 150 )
+//            center.setText(a[2]);
+//
+
+    }
     public static int unsignedToBytes(byte b) {
         return b & 0xFF;
     }
 
+//    void startVideo()
+//    {
+//        testing = new Thread()
+//        {
+//            @Override
+//            public void run() {
+//                Mjpeg.newInstance()
+//                        .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
+//                        .subscribe(inputStream -> {
+//                            mjpegView.setSource(inputStream);
+//                            mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
+//                            mjpegView.showFps(true);
+//                            mjpegView.flipVertical(true);
+//
+//                        },throwable -> {
+//                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+//                            //Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
+//                        });
+//
+//            }
+//        };
+//        testing.start();
+//    }
 
     void findBT()
     {
@@ -168,7 +264,9 @@ public class DemoActivity extends AppCompatActivity {
 
             public void run()
             {
-               // System.out.println("you make it in here fam");
+                boolean didI = false;
+
+                // System.out.println("you make it in here fam");
                // System.out.println("StopWorker Value: " + stopWorker);
                 //System.out.println(" Thread.currentThread: " + Thread.currentThread().isInterrupted());
                 while(!Thread.currentThread().isInterrupted() && !stopWorker)
@@ -188,13 +286,14 @@ public class DemoActivity extends AppCompatActivity {
                             // bytesAvailable = 4
                             for(int i=0;i<bytesAvailable;i++)
                             {
-                                //System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
+                                System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
+                                //System.out.println("value as Hex" + packetBytes[i]);
 
 
                                 // System.out.print("ByteCount: " + byteCount);
                                 // System.out.print("I for packetBytes: " + i);
                                 // System.out.println("bytesAvailable:  " + bytesAvailable);
-                                System.out.print("packet bytes: " + packetBytes[i]);
+                               // System.out.print("packet bytes: " + packetBytes[i]);
 //                                float solution = 0;
 //                                int decimalPoint = 0;
 
@@ -239,106 +338,125 @@ public class DemoActivity extends AppCompatActivity {
 //                                System.out.println("Solution: " + solution);
 //                                System.out.println("Decimal Point: " + decimalPoint);
 
-                                byteBuffer[byteCount] = (packetBytes[i] & 0xff);
-                                byteCount++;
+                              //  byteBuffer[byteCount] = (packetBytes[i] & 0xff);
+                                byteBuffer2[byteCount] = packetBytes[i];
 
+                                byteCount++;
                                 //System.out.println("val: = " + Val);
-                                byte b = packetBytes[i];
-                                if(byteCount > 3)
+                                if(packetBytes[i] == 0x1f)
                                 {
+                                    didI = true;
+                                    System.out.println("eat my whole ass");
+                                    byteCount = 0;
+                                }
+
+
+                                if(byteCount > 5 && didI)
+                                {
+                                    didI = false;
                                     byteCount = 0;
 
-
-                                    Val = Float.intBitsToFloat(
-                                            (byteBuffer[3])
-                                                    | ((byteBuffer[2]) << 8)
-                                                    | ((byteBuffer[1]) << 16)
-                                                    | ((byteBuffer[0]) << 24));
-
-                                    String myAss = Float.toString(Val);
-                                    //System.out.println("myAss: " + myAss);
-                                    //myStringArray1.add(myAss);
-                                    // adapter = new ArrayAdapter<String>(this, android.R.layout., myStringArray1);
-                                    ///  myListView.setAdapter(adapter);
-
-
-                                    String old = "luca";
-                                    old = floatvalshow.getText().toString();
-                                    String combine = old +" , " + myAss;
-                                    // System.out.println("combine: " + combine);
-                                    //floatvalshow.setText(combine);
-
-                                    if(center)
-                                    {
-                                        center = false;
-                                        runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-
-                                                updateTextcenter(combine);
-
-
-                                            }
-                                        });
-                                    }
-                                    if(left)
-                                    {
-                                        runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-
-                                                updateTextleft(combine);
-
-
-                                            }
-                                        });
-                                        left = false;
-                                        right = true;
-                                    }
-                                    if(right)
-                                    {
-                                        runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-
-                                                updateTextright(combine);
-
-
-                                            }
-                                        });
-
-                                        right = false;
-                                        center = true;
-                                    }
-                                    readBufferPosition = 0;
-                                    //long timeend = testme - endtime;
-                                    //System.out.println("last time value: " + endtime);
-
-                                    //  System.out.print("the time it took: " + timeend );
-                                    System.out.println("VAl: " + Val);
-
-                                    if(!myAss.equals("12.345679"))
-                                    {
-                                        counter2++;
-                                        System.out.println("Val of error: " + counter2);
-                                    }
-
-                                    if(Val == 0.0)
-                                    {
-                                        testme = System.currentTimeMillis();
-
-                                    }
-                                    if(Val == 59.0)
-                                    {
-                                        long endtime = System.currentTimeMillis();
-                                        //System.out.println("time it took = " + (endtime - testme));
-
-                                    }
+                                    TMFrame p = new TMFrame(byteBuffer2);
 
                                 }
+
+                                //System.out.println("val: = " + Val);
+//                                byte b = packetBytes[i];
+//                                if(byteCount > 3)
+//                                {
+//                                    byteCount = 0;
+//
+//
+//                                    Val = Float.intBitsToFloat(
+//                                            (byteBuffer[3])
+//                                                    | ((byteBuffer[2]) << 8)
+//                                                    | ((byteBuffer[1]) << 16)
+//                                                    | ((byteBuffer[0]) << 24));
+//
+//                                    String myAss = Float.toString(Val);
+//                                    //System.out.println("myAss: " + myAss);
+//                                    //myStringArray1.add(myAss);
+//                                    // adapter = new ArrayAdapter<String>(this, android.R.layout., myStringArray1);
+//                                    ///  myListView.setAdapter(adapter);
+//
+//
+//                                    String old = "luca";
+//                                    old = floatvalshow.getText().toString();
+//                                    String combine = old +" , " + myAss;
+//                                    // System.out.println("combine: " + combine);
+//                                    //floatvalshow.setText(combine);
+//
+//                                    if(center)
+//                                    {
+//                                        center = false;
+//                                        runOnUiThread(new Runnable() {
+//
+//                                            @Override
+//                                            public void run() {
+//
+//                                                updateTextcenter(combine);
+//
+//
+//                                            }
+//                                        });
+//                                    }
+//                                    if(left)
+//                                    {
+//                                        runOnUiThread(new Runnable() {
+//
+//                                            @Override
+//                                            public void run() {
+//
+//                                                updateTextleft(combine);
+//
+//
+//                                            }
+//                                        });
+//                                        left = false;
+//                                        right = true;
+//                                    }
+//                                    if(right)
+//                                    {
+//                                        runOnUiThread(new Runnable() {
+//
+//                                            @Override
+//                                            public void run() {
+//
+//                                                updateTextright(combine);
+//
+//
+//                                            }
+//                                        });
+//
+//                                        right = false;
+//                                        center = true;
+//                                    }
+//                                    readBufferPosition = 0;
+//                                    //long timeend = testme - endtime;
+//                                    //System.out.println("last time value: " + endtime);
+//
+//                                    //  System.out.print("the time it took: " + timeend );
+//                                    System.out.println("VAl: " + Val);
+//
+//                                    if(!myAss.equals("12.345679"))
+//                                    {
+//                                        counter2++;
+//                                        System.out.println("Val of error: " + counter2);
+//                                    }
+//
+//                                    if(Val == 0.0)
+//                                    {
+//                                        testme = System.currentTimeMillis();
+//
+//                                    }
+//                                    if(Val == 59.0)
+//                                    {
+//                                        long endtime = System.currentTimeMillis();
+//                                        //System.out.println("time it took = " + (endtime - testme));
+//
+//                                    }
+//
+//                                }
                                 //if(b == delimiter)
 
                                 if(false)
@@ -361,7 +479,7 @@ public class DemoActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    readBuffer[readBufferPosition++] = b;
+                                    //readBuffer[readBufferPosition++] = b;
                                 }
                             }
 
@@ -524,15 +642,15 @@ public class DemoActivity extends AppCompatActivity {
                 }
                 catch (IOException ex) { }
 
-                try
-                {
-                    if(mmOutputStream != null)
-                    {
-                        sendData();
-                    }
-
-                }
-                catch (IOException ex) { }
+//                try
+//                {
+//                    if(mmOutputStream != null)
+//                    {
+//                        sendData();
+//                    }
+//
+//                }
+//                catch (IOException ex) { }
 
 
             }
@@ -558,8 +676,11 @@ public class DemoActivity extends AppCompatActivity {
 //        }
 //        catch (IOException ex) { }
 
+       // startVideo();
 
-        Mjpeg.newInstance()
+
+
+                Mjpeg.newInstance()
                 .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
                 .subscribe(inputStream -> {
                     mjpegView.setSource(inputStream);
@@ -571,6 +692,8 @@ public class DemoActivity extends AppCompatActivity {
                     Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
                     Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
                 });
+
+
 
 
 

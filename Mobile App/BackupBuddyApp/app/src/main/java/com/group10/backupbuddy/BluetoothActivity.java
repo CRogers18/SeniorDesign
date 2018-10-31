@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 
-
-
+import org.w3c.dom.Text;
 
 
 public class BluetoothActivity extends Activity
@@ -108,7 +107,7 @@ public class BluetoothActivity extends Activity
 
 //            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
 //                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
-           final String[] strVals = { Float.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
+           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
             runOnUiThread(() -> updateText(strVals) );
         }
@@ -130,7 +129,11 @@ public class BluetoothActivity extends Activity
         myLabel = (TextView)findViewById(R.id.label);
         myTextbox = (EditText)findViewById(R.id.entry);
         floatvalshow = (TextView)findViewById(R.id.label2);
-     //   myListView = (ListView)findViewById(R.id.floatList);
+        value1 = (TextView)findViewById(R.id.value1);
+        value2 = (TextView)findViewById(R.id.value2);
+        value3 = (TextView)findViewById(R.id.value3);
+
+        //   myListView = (ListView)findViewById(R.id.floatList);
 
         //Open Button
         openButton.setOnClickListener(new View.OnClickListener()
@@ -220,14 +223,23 @@ public class BluetoothActivity extends Activity
     void updateText(String[] a)
     {
         floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
-        if(!a[0].equals("0") || Integer.parseInt(a[0]) < 150 )
+
+        if(a[0] != "0")
             value1.setText(a[0]);
-
-        if(!a[1].equals("0") || Integer.parseInt(a[1]) < 150 )
+        if(a[1] != "0")
             value2.setText(a[1]);
-
-        if(!a[2].equals("0")|| Integer.parseInt(a[2]) < 150 )
+        if(a[2] != "0")
             value3.setText(a[2]);
+
+
+//        if(!a[0].equals("0") ) // Integer.parseInt(a[0]) < 150
+//            value1.setText(a[0]);
+//
+//        if(!a[1].equals("0")  )//|| Integer.parseInt(a[1]) < 150
+//            value2.setText(a[1]);
+//
+//        if(!a[2].equals("0"))//| Integer.parseInt(a[2]) < 150
+//            value3.setText(a[2]);
 
 
     }
