@@ -5,19 +5,14 @@
 #define echoPin_1 P4_3
 #define trigPin_2 P2_4
 #define echoPin_2 P2_2
-#define trigPin_3 P3_4
-#define echoPin_3 P3_5
+#define trigPin_3 P1_4
+#define echoPin_3 P1_3
 
 #include <Wire.h>
-#include <SparkFun_MMA8452Q.h>
 #include <stdint.h>
 
-MMA8452Q accel;
-
-void printAccels();
-
 uint8_t i = 0, duration_1_MSB, duration_1_LSB, duration_2_MSB, duration_2_LSB, duration_3_MSB, duration_3_LSB;
-uint32_t duration_1, duration_2, duration_3, accel_x, accel_y, accel_z;
+uint16_t duration_1, duration_2, duration_3;
 
 
 void setup()
@@ -30,14 +25,11 @@ void setup()
   pinMode(trigPin_3, OUTPUT);
   pinMode(echoPin_3, INPUT);
   Serial.begin(9600);
-  accel.init(SCALE_2G, ODR_6);
   Serial.println("Startup complete");
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
-  
   //Ultrasonic Sensor 1
   digitalWrite(trigPin_1, HIGH);
   delayMicroseconds(10);
@@ -61,28 +53,6 @@ void loop()
 
   sendUltraToPhone();
   //printUltra();
-
-  if(accel.available())
-  {
-      accel.read();
-      Serial.write( (uint16_t) accel.cx);
-      Serial.write( (uint16_t) accel.cy);
-      Serial.write( (uint16_t) accel.cz);
-      printAccels();
-  }
-
-  //delay(500);
-}
-
-void printAccels()
-{
-  Serial.print(accel.cx, 3);
-  Serial.print("\t");
-  Serial.print(accel.cy, 3);
-  Serial.print("\t");
-  Serial.print(accel.cz, 3);
-  Serial.print("\t");
-  Serial.println("\n");
 }
 
 void printUltra()
@@ -109,17 +79,15 @@ void sendUltraToPhone()
   duration_1_LSB = (duration_1 & 0x00FF);
   Serial.write(duration_1_MSB);
   Serial.write(duration_1_LSB);
-  //Serial.write('\n');
   
   duration_2_MSB = (duration_2 & 0xFF00) >> 8;
   duration_2_LSB = (duration_2 & 0x00FF);
   Serial.write(duration_2_MSB);
   Serial.write(duration_2_LSB);
-  //Serial.write('\n');
   
   duration_3_MSB = (duration_3 & 0xFF00) >> 8;
   duration_3_LSB = (duration_3 & 0x00FF);
   Serial.write(duration_3_MSB);
   Serial.write(duration_3_LSB);
-  //Serial.write('\n');
 }
+
