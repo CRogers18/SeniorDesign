@@ -20,18 +20,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DemoActivity">
+        <activity android:name=".DemoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".BackUpCamera" />
-        <activity android:name=".bluetoothLearning" />
-        <activity android:name=".MainMenuActivity" />
-        <activity android:name=".BluetoothActivity"></activity>
+        <activity android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+
+        <activity android:name=".BackUpCamera"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+
+        <activity android:name=".bluetoothLearning"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+
+        <activity android:name=".BluetoothActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+
+        <activity android:name=".MainMenuActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+
     </application>
 
 </manifest>

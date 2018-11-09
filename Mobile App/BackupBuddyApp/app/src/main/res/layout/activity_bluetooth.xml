@@ -3,16 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:ignore="TextFields,HardcodedText" >
+    tools:ignore="TextFields,HardcodedText">
 
     <TextView
-        android:id="@+id/value3"
+        android:id="@+id/accYData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/close"
-        android:layout_alignTop="@+id/Ultrasonic3"
+        android:layout_alignTop="@+id/accX"
+        android:layout_toStartOf="@+id/send"
         android:text="OFF"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/AccXData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/accZData"
+        android:layout_alignTop="@+id/accX"
+        android:text="OFF"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/Ultrasonic3"
@@ -20,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="79dp"
+        android:layout_marginBottom="164dp"
         android:text="Ultrasonic3:"
         android:textSize="18sp" />
 
@@ -30,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="128dp"
+        android:layout_marginBottom="220dp"
         android:text="Ultrasonic2:"
         android:textSize="18sp" />
 
@@ -87,16 +96,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/close"
-        android:text="This be the data:"
         android:textSize="32sp" />
 
     <TextView
         android:id="@+id/Ultrasonic1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="208dp"
         android:text="Ultrasonic1:"
         android:textSize="18sp" />
 
@@ -104,9 +112,68 @@
         android:id="@+id/value1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/close"
+        android:layout_alignStart="@+id/value2"
         android:layout_alignTop="@+id/Ultrasonic1"
         android:text="OFF"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/AccHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="112dp"
+        android:text="Accelerometer:"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/accX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="75dp"
+        android:text="X: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/accY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/value2"
+        android:layout_alignTop="@+id/accYData"
+        android:text="Y:"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/accZ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="19dp"
+        android:text="Z: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/accZData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/accZ"
+        android:layout_marginStart="51dp"
+        android:text="OFF"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/value3"
+        android:layout_width="33dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/value2"
+        android:layout_alignTop="@+id/Ultrasonic3"
+        android:layout_marginTop="0dp"
+        android:text="off"
         android:textSize="18sp" />
 
 

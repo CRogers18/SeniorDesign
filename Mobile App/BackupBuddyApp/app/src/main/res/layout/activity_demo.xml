@@ -5,129 +5,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.NoActionBar"
     tools:context=".DemoActivity">
 
+    <!--<com.github.niqdev.mjpeg.MjpegSurfaceView-->
+    <!--android:id="@+id/VIEW_NAME"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
 
-    <com.github.niqdev.mjpeg.MjpegSurfaceView
-        android:id="@+id/VIEW_NAME"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintHorizontal_bias="0.0"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent"-->
+    <!--app:layout_constraintVertical_bias="1.0"-->
+    <!--stream:type="stream_default" />-->
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        stream:type="stream_default" />
+    <!--<TextView-->
+    <!--android:id="@+id/right"-->
+    <!--android:layout_width="74dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_marginBottom="3dp"-->
+    <!--android:layout_marginEnd="16dp"-->
+    <!--android:background="@android:color/holo_red_dark"-->
+    <!--android:text="OFF"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textSize="36sp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toEndOf="@+id/center"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/webview"-->
+    <!--app:layout_constraintVertical_bias="0.0" />-->
 
-    <TextView
-        android:id="@+id/right"
-        android:layout_width="74dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
-        android:background="@android:color/holo_red_dark"
-        android:text="OFF"
-        android:textAlignment="center"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/center"
-        app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.0" />
+    <!--<TextView-->
+    <!--android:id="@+id/center"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="42dp"-->
+    <!--android:layout_marginBottom="7dp"-->
+    <!--android:background="@android:color/holo_red_dark"-->
+    <!--android:text="OFF"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textSize="36sp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toStartOf="@+id/right"-->
+    <!--app:layout_constraintStart_toEndOf="@+id/left" />-->
 
-    <TextView
-        android:id="@+id/center"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginBottom="7dp"
-        android:background="@android:color/holo_red_dark"
-        android:text="OFF"
-        android:textAlignment="center"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toEndOf="@+id/left" />
+    <!--<TextView-->
+    <!--android:id="@+id/left"-->
+    <!--android:layout_width="77dp"-->
+    <!--android:layout_height="49dp"-->
+    <!--android:layout_marginBottom="7dp"-->
+    <!--android:layout_marginEnd="1dp"-->
+    <!--android:background="@android:color/holo_red_dark"-->
+    <!--android:text="OFF"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textSize="36sp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toStartOf="@+id/center"-->
+    <!--app:layout_constraintHorizontal_chainStyle="spread_inside"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/bluetooth" />-->
 
-    <TextView
-        android:id="@+id/left"
-        android:layout_width="77dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="1dp"
-        android:background="@android:color/holo_red_dark"
-        android:text="OFF"
-        android:textAlignment="center"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/center"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetooth" />
+    <!--<Button-->
+    <!--android:id="@+id/Exit"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="198dp"-->
+    <!--android:layout_marginEnd="16dp"-->
+    <!--android:layout_marginTop="16dp"-->
+    <!--android:text="Exit"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/right"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-    <Button
-        android:id="@+id/Exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="198dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Exit"
-        app:layout_constraintBottom_toTopOf="@+id/right"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--<Button-->
+    <!--android:id="@+id/bluetooth"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="198dp"-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--android:layout_marginStart="16dp"-->
+    <!--android:layout_marginTop="16dp"-->
+    <!--android:text="Bluetooth"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/left"-->
+    <!--app:layout_constraintEnd_toStartOf="@+id/webview"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-    <Button
-        android:id="@+id/bluetooth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="198dp"
-        android:layout_marginEnd="75dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Bluetooth"
-        app:layout_constraintBottom_toTopOf="@+id/left"
-        app:layout_constraintEnd_toStartOf="@+id/value2overt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--<View-->
+    <!--android:id="@+id/value3overt"-->
+    <!--android:layout_width="21dp"-->
+    <!--android:layout_height="21dp"-->
+    <!--android:layout_marginEnd="16dp"-->
+    <!--android:layout_x="0dp"-->
+    <!--android:layout_y="0dp"-->
+    <!--android:background="#FF0000"-->
+    <!--android:rotation="44" />-->
+
+    <!--<View-->
+    <!--android:id="@+id/value2overt"-->
+    <!--android:layout_width="161dp"-->
+    <!--android:layout_height="20dp"-->
+    <!--android:background="#FF0000" />-->
+
+    <!--<View-->
+    <!--android:id="@+id/value1overt"-->
+    <!--android:layout_width="8dp"-->
+    <!--android:layout_height="13dp"-->
+    <!--android:layout_marginBottom="88dp"-->
+    <!--android:layout_marginStart="208dp"-->
+    <!--android:layout_x="0dp"-->
+    <!--android:layout_y="0dp"-->
+    <!--android:background="#FF0000"-->
+    <!--android:rotation="-22" />-->
+
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </WebView>
 
     <View
-        android:id="@+id/value1overt"
-        android:layout_width="193dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:background="#00ff0004"
-        android:rotation="-22"
+        android:id="@+id/middleBar"
+        android:layout_width="200dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="196dp"
+        android:background="#59ff0000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.682" />
+        app:layout_constraintEnd_toEndOf="@+id/webview"
+        app:layout_constraintHorizontal_bias="0.143"
+        app:layout_constraintStart_toStartOf="@+id/webview" />
 
     <View
-        android:id="@+id/value2overt"
-        android:layout_width="161dp"
-        android:layout_height="43dp"
-        android:layout_marginEnd="195dp"
-        android:background="#00ff0004"
-        app:layout_constraintBottom_toBottomOf="@+id/value3overt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/bluetooth"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.765" />
+        android:id="@+id/leftBar"
+        android:layout_width="200dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="12dp"
+        android:background="#59ff0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
-        android:id="@+id/value3overt"
-        android:layout_width="151dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="184dp"
-        android:background="#00ff0004"
-        android:rotation="22"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.866"
-        app:layout_constraintStart_toEndOf="@+id/value1overt"
-        app:layout_constraintTop_toTopOf="@+id/VIEW_NAME" />
-
+        android:id="@+id/rightBar"
+        android:layout_width="200dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="432dp"
+        android:background="#59ff0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

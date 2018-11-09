@@ -1,5 +1,6 @@
 package com.group10.backupbuddy;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -73,6 +74,9 @@ public class DemoActivity extends AppCompatActivity {
     volatile boolean stopWorker;
     TextView floatvalshow;
     ListView myListView;
+    View leftBar;
+    View rightBar;
+    View centerBar;
     ArrayAdapter<String> adapter;
     long testme;
     float Val;
@@ -80,6 +84,11 @@ public class DemoActivity extends AppCompatActivity {
     int[] byteBuffer = new int[4];
     int counter2 = 0;
     byte[] byteBuffer2 = new byte[120];
+    String leftbarcolor = "#5900FF22";
+    String rightbarcolor = "#5900FF22";
+    String centerbarcolor = "#5900FF22";
+
+
 
 
     public class TMFrame
@@ -128,7 +137,7 @@ public class DemoActivity extends AppCompatActivity {
 //                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
             final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
-            runOnUiThread(() -> updateText(strVals) );
+            //runOnUiThread(() -> updateText(strVals) );
         }
     }
     void updateText(String[] a)
@@ -247,7 +256,7 @@ public class DemoActivity extends AppCompatActivity {
     {
 
 
-        final Handler handler = new Handler();
+        //final Handler handler = new Handler();
         final byte delimiter = 10; //This is the ASCII code for a newline character
 
         stopWorker = false;
@@ -259,9 +268,9 @@ public class DemoActivity extends AppCompatActivity {
         {
             // This is used to update which view is changed
             boolean center = true;
-            boolean left = false;
+            //boolean left = false;
             boolean right = false;
-
+            int dist_1count = 0;
             public void run()
             {
                 boolean didI = false;
@@ -286,57 +295,8 @@ public class DemoActivity extends AppCompatActivity {
                             // bytesAvailable = 4
                             for(int i=0;i<bytesAvailable;i++)
                             {
-                                System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
-                                //System.out.println("value as Hex" + packetBytes[i]);
+//                                System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
 
-
-                                // System.out.print("ByteCount: " + byteCount);
-                                // System.out.print("I for packetBytes: " + i);
-                                // System.out.println("bytesAvailable:  " + bytesAvailable);
-                               // System.out.print("packet bytes: " + packetBytes[i]);
-//                                float solution = 0;
-//                                int decimalPoint = 0;
-
-//                                if(((packetBytes[i] >> 6) & 1) == 1)
-//                                {
-//                                    solution = 1;
-//                                }
-//                                if(((packetBytes[i] >> 5) & 1) == 1)
-//                                {
-//                                    decimalPoint += 5000;
-//                                }
-//                                if(((packetBytes[i] >> 4) & 1) == 1)
-//                                {
-//                                    decimalPoint += 2500;
-//
-//                                }
-//                                if(((packetBytes[i] >> 3) & 1) == 1)
-//                                {
-//                                    decimalPoint += 1250;
-//
-//                                }
-//                                if(((packetBytes[i] >> 2) & 1) == 1)
-//                                {
-//                                    decimalPoint += 625;
-//
-//                                }
-//                                if(((packetBytes[i] >> 1) & 1) == 1)
-//                                {
-//                                    decimalPoint += 313;
-//
-//                                }
-//                                if(((packetBytes[i] >> 0) & 1) == 1)
-//                                {
-//                                    decimalPoint += 156;
-//
-//                                }
-//                                if(((packetBytes[i] >> 7) & 1) == 1)
-//                                {
-//                                    solution = solution * -1;
-//
-//                                }
-//                                System.out.println("Solution: " + solution);
-//                                System.out.println("Decimal Point: " + decimalPoint);
 
                               //  byteBuffer[byteCount] = (packetBytes[i] & 0xff);
                                 byteBuffer2[byteCount] = packetBytes[i];
@@ -346,7 +306,7 @@ public class DemoActivity extends AppCompatActivity {
                                 if(packetBytes[i] == 0x1f)
                                 {
                                     didI = true;
-                                    System.out.println("eat my whole ass");
+                                    //System.out.println("eat my whole ass");
                                     byteCount = 0;
                                 }
 
@@ -355,109 +315,39 @@ public class DemoActivity extends AppCompatActivity {
                                 {
                                     didI = false;
                                     byteCount = 0;
+                                    int dist_1, dist_2, dist_3;
+                                    float accel_x, accel_y, accel_z;
 
-                                    TMFrame p = new TMFrame(byteBuffer2);
 
+
+                                    int[] dataConvert = new int[byteBuffer2.length];
+
+
+                                    for(int w = 0; w < byteBuffer2.length; w++)
+                                    {
+                                        dataConvert[w] = (int)byteBuffer2[w] & 0xff;
+                                    }
+
+
+                                    dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+
+                                    dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+
+                                    dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+
+                                    accel_x = (dataConvert[6] << 8) | dataConvert[7];
+                                    accel_y = (dataConvert[8] << 8) | dataConvert[9];
+                                    accel_z = (dataConvert[10] << 8) | dataConvert[11];
+
+
+//
+//
+//
+//
+//                                                          //TMFrame p = new TMFrame(byteBuffer2);
+//                                    });
                                 }
 
-                                //System.out.println("val: = " + Val);
-//                                byte b = packetBytes[i];
-//                                if(byteCount > 3)
-//                                {
-//                                    byteCount = 0;
-//
-//
-//                                    Val = Float.intBitsToFloat(
-//                                            (byteBuffer[3])
-//                                                    | ((byteBuffer[2]) << 8)
-//                                                    | ((byteBuffer[1]) << 16)
-//                                                    | ((byteBuffer[0]) << 24));
-//
-//                                    String myAss = Float.toString(Val);
-//                                    //System.out.println("myAss: " + myAss);
-//                                    //myStringArray1.add(myAss);
-//                                    // adapter = new ArrayAdapter<String>(this, android.R.layout., myStringArray1);
-//                                    ///  myListView.setAdapter(adapter);
-//
-//
-//                                    String old = "luca";
-//                                    old = floatvalshow.getText().toString();
-//                                    String combine = old +" , " + myAss;
-//                                    // System.out.println("combine: " + combine);
-//                                    //floatvalshow.setText(combine);
-//
-//                                    if(center)
-//                                    {
-//                                        center = false;
-//                                        runOnUiThread(new Runnable() {
-//
-//                                            @Override
-//                                            public void run() {
-//
-//                                                updateTextcenter(combine);
-//
-//
-//                                            }
-//                                        });
-//                                    }
-//                                    if(left)
-//                                    {
-//                                        runOnUiThread(new Runnable() {
-//
-//                                            @Override
-//                                            public void run() {
-//
-//                                                updateTextleft(combine);
-//
-//
-//                                            }
-//                                        });
-//                                        left = false;
-//                                        right = true;
-//                                    }
-//                                    if(right)
-//                                    {
-//                                        runOnUiThread(new Runnable() {
-//
-//                                            @Override
-//                                            public void run() {
-//
-//                                                updateTextright(combine);
-//
-//
-//                                            }
-//                                        });
-//
-//                                        right = false;
-//                                        center = true;
-//                                    }
-//                                    readBufferPosition = 0;
-//                                    //long timeend = testme - endtime;
-//                                    //System.out.println("last time value: " + endtime);
-//
-//                                    //  System.out.print("the time it took: " + timeend );
-//                                    System.out.println("VAl: " + Val);
-//
-//                                    if(!myAss.equals("12.345679"))
-//                                    {
-//                                        counter2++;
-//                                        System.out.println("Val of error: " + counter2);
-//                                    }
-//
-//                                    if(Val == 0.0)
-//                                    {
-//                                        testme = System.currentTimeMillis();
-//
-//                                    }
-//                                    if(Val == 59.0)
-//                                    {
-//                                        long endtime = System.currentTimeMillis();
-//                                        //System.out.println("time it took = " + (endtime - testme));
-//
-//                                    }
-//
-//                                }
-                                //if(b == delimiter)
 
                                 if(false)
                                 {
@@ -468,14 +358,14 @@ public class DemoActivity extends AppCompatActivity {
                                     final String data = new String(encodedBytes, "US-ASCII");
                                     readBufferPosition = 0;
 
-                                    handler.post(new Runnable()
-                                    {
-                                        public void run()
-                                        {
-                                            System.out.println("data is here: " + data);
-                                            myLabel.setText(data);
-                                        }
-                                    });
+//                                    handler.post(new Runnable()
+//                                    {
+//                                        public void run()
+//                                        {
+//                                            System.out.println("data is here: " + data);
+//                                            myLabel.setText(data);
+//                                        }
+//                                    });
                                 }
                                 else
                                 {
@@ -483,55 +373,7 @@ public class DemoActivity extends AppCompatActivity {
                                 }
                             }
 
-//                            if(byteCount > 2)
-//                            {
-//                                byteCount = 0;
-//
-//
-//                                //Val = ( (unsignedToBytes(byteBuffer[0])) | (unsignedToBytes(byteBuffer[1]) << 8) | (unsignedToBytes(byteBuffer[2]) << 16) | (unsignedToBytes(byteBuffer[3]) << 24));
-//
-//                                //Val = Byte.toUnsignedInt(byteBuffer[0]) | Byte.toUnsignedInt(byteBuffer[1]) << 8 | Byte.toUnsignedInt(byteBuffer[2]) << 16|Byte.toUnsignedInt(byteBuffer[3]) <<24;
-//                                      //  Val = (int)byteBuffer[0] & 0xff | ((int)byteBuffer[1] & 0xff) << 8 | ((int)byteBuffer[2] & 0xff) << 16 | ((int)byteBuffer[3] & 0xff) << 24 ;
-//                                System.out.println("ByteBuffer[3: " + byteBuffer[3]);
-//                                System.out.println("ByteBuffer[2: " + byteBuffer[2]);
-//                                System.out.println("ByteBuffer[1: " + byteBuffer[1]);
-//                                System.out.println("ByteBuffer[0: " + byteBuffer[0]);
-//
-//
-//                                 Val = Float.intBitsToFloat(
-//                                        (byteBuffer[3])
-//                                                | ((byteBuffer[2]) << 8)
-//                                                | ((byteBuffer[1]) << 16)
-//                                                | ((byteBuffer[0]) << 24));
-//
-//                                 String myAss = Float.toString(Val);
-//                                System.out.println("myAss: " + myAss);
-//                                //myStringArray1.add(myAss);
-//                               // adapter = new ArrayAdapter<String>(this, android.R.layout., myStringArray1);
-//                              ///  myListView.setAdapter(adapter);
-//
-//
-//                                String old = "luca";
-//                                old = floatvalshow.getText().toString();
-//                                String combine = old +" , " + myAss;
-//                                System.out.println("combine: " + combine);
-//                                //floatvalshow.setText(combine);
-//
-//                                runOnUiThread(new Runnable() {
-//
-//                                    @Override
-//                                    public void run() {
-//
-//                                        updateText(combine);
-//
-//
-//                                    }
-//                                });
-//                                readBufferPosition = 0;
-//
-//                                System.out.println("VAl: " + Val);
-//
-//                            }
+
 
                         }
                     }
@@ -581,7 +423,7 @@ public class DemoActivity extends AppCompatActivity {
     TextView center;
     Button exit;
     Button bluetooth;
-
+    WebView webView;
 
 
     //WebView webView;
@@ -597,15 +439,26 @@ public class DemoActivity extends AppCompatActivity {
         // your code
         setContentView(R.layout.activity_demo);
         getSupportActionBar().hide();
+        leftBar = (View)findViewById(R.id.leftBar);
+        rightBar = (View)findViewById(R.id.rightBar);
+        centerBar = (View)findViewById(R.id.middleBar);
+
+
+        //red color is #59ff0000
+        // yellow color is #59FFC400
+        // green color is #5900FF22
+
+
         //videoView = (VideoView)findViewById(R.id.videoView);
        //- btnPlayPause = (ImageButton)findViewById(R.id.btn_play_pause);
         //btnPlayPause.setOnClickListener(this);
-        mjpegView = (MjpegView)findViewById(R.id.VIEW_NAME);
-        left = (TextView)findViewById(R.id.left);
-        right = (TextView)findViewById(R.id.right);
-        center = (TextView)findViewById(R.id.center);
-        exit = (Button)findViewById(R.id.Exit);
-        bluetooth = (Button)findViewById(R.id.bluetooth);
+//        mjpegView = (MjpegView)findViewById(R.id.VIEW_NAME);
+//        left = (TextView)findViewById(R.id.left);
+//        right = (TextView)findViewById(R.id.right);
+//        center = (TextView)findViewById(R.id.center);
+//        exit = (Button)findViewById(R.id.Exit);
+//        bluetooth = (Button)findViewById(R.id.bluetooth);
+        webView = (WebView)findViewById(R.id.webview);
 
         //distancetoback.setText("what");
         // distancetoback.setBackgroundColor()
@@ -616,45 +469,64 @@ public class DemoActivity extends AppCompatActivity {
 //        viewer.setUrl("http://192.168.4.1:8080/?action=stream");
 //        viewer.startStream();
 
-        exit.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                try {
-                    if(mmOutputStream != null && mmInputStream!=null && mmSocket!= null)
-                    closeBT();
-                }
-                catch (IOException ex) { }
-
-                Intent Home = new Intent(DemoActivity.this, MainMenuActivity.class);
-                DemoActivity.this.startActivity(Home);
-            }
-        });
-
-        bluetooth.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                try
-                {
-                    findBT();
-                    openBT();
-                }
-                catch (IOException ex) { }
-
-//                try
-//                {
-//                    if(mmOutputStream != null)
-//                    {
-//                        sendData();
-//                    }
+//        exit.setOnClickListener(new View.OnClickListener() {
 //
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    if(mmOutputStream != null && mmInputStream!=null && mmSocket!= null)
+//                    closeBT();
 //                }
 //                catch (IOException ex) { }
+//
+//                Intent Home = new Intent(DemoActivity.this, MainMenuActivity.class);
+//                DemoActivity.this.startActivity(Home);
+//            }
+//        });
+//
+//        bluetooth.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+////                new Thread(new Runnable() {
+////                    public void run() {
+//                        // a potentially time consuming task
+//                        try
+//                        {
+//                            findBT();
+//                            openBT();
+//                        }
+//                        catch (IOException ex) { }
+//
+////                    }
+////                }).start();
+//
+//
+//
+//
+//
+////                try
+////                {
+////                    if(mmOutputStream != null)
+////                    {
+////                        sendData();
+////                    }
+////
+////                }
+////                catch (IOException ex) { }
+//
+//
+//            }
+//        });
 
 
-            }
-        });
+
+//        try
+//        {
+//            findBT();
+//            openBT();
+//        }
+//        catch (IOException ex) { }
 //        try
 //        {
 //            findBT();
@@ -678,26 +550,230 @@ public class DemoActivity extends AppCompatActivity {
 
        // startVideo();
 
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.loadUrl("http://192.168.4.1:8080/?action=stream");
 
 
-                Mjpeg.newInstance()
-                .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
-                .subscribe(inputStream -> {
-                    mjpegView.setSource(inputStream);
-                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
-                    mjpegView.showFps(true);
-                    mjpegView.flipVertical(true);
+//                Mjpeg.newInstance()
+//                .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
+//                .subscribe(inputStream -> {
+//                    mjpegView.setSource(inputStream);
+//                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
+//                    mjpegView.showFps(true);
+//                    mjpegView.flipVertical(true);
+//
+//                },throwable -> {
+//                    Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+//                    Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
+//                });
+      //  MjpegView viewer = (MjpegView) findViewById(R.id.mjpegview);
+      //  mjpegView.setMode(MjpegView.MODE_FIT_WIDTH);
+      //  mjpegView.setAdjustHeight(true);
+       // mjpegView.setUrl("http://www.example.com/mjpeg.php?id=1234");
+       // mjpegView.getSurfaceView()
 
-                },throwable -> {
-                    Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
-                    Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
-                });
-
-
-
+        new LongRunningTask().execute();
 
 
     }
+    private class LongRunningTask extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try
+            {
+                mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if(mBluetoothAdapter == null)
+                {
+                    //myLabel.setText("No bluetooth adapter available");
+                    System.out.println("No bluetooth adapter available");
+                }
+
+                if(!mBluetoothAdapter.isEnabled())
+                {
+                    Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBluetooth, 0);
+                }
+
+                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+                if(pairedDevices.size() > 0)
+                {
+                    for(BluetoothDevice device : pairedDevices)
+                    {
+                        if(device.getName().equals("HC-06"))
+                        {
+                            mmDevice = device;
+                            break;
+                        }
+                    }
+                }
+                UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
+                mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+                mmSocket.connect();
+                mmOutputStream = mmSocket.getOutputStream();
+                mmInputStream = mmSocket.getInputStream();
+
+
+                System.out.println("Bluetooth Opened");
+                stopWorker = false;
+
+                readBufferPosition = 0;
+                readBuffer = new byte[1024];
+                boolean didI = false;
+                while(!stopWorker)
+                {
+                    try
+                    {
+                        int bytesAvailable = mmInputStream.available();
+                        if(bytesAvailable > 0)
+                        {
+
+                            byte[] packetBytes = new byte[bytesAvailable];
+                            mmInputStream.read(packetBytes);
+                            for(int i=0;i<bytesAvailable;i++)
+                            {
+                                System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
+
+                                byteBuffer2[byteCount] = packetBytes[i];
+
+                                byteCount++;
+                                if(packetBytes[i] == 0x1f)
+                                {
+                                    didI = true;
+                                    //System.out.println("eat my whole ass");
+                                    byteCount = 0;
+                                }
+
+
+                                if(byteCount > 5 && didI)
+                                {
+                                    didI = false;
+                                    int dist_1, dist_2, dist_3;
+                                    float accel_x, accel_y, accel_z;
+
+
+
+                                    int[] dataConvert = new int[byteBuffer2.length];
+
+
+                                    for(int w = 0; w < byteBuffer2.length; w++)
+                                    {
+                                        dataConvert[w] = (int)byteBuffer2[w] & 0xff;
+                                    }
+
+
+                                    dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+
+                                    dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+
+                                    dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+
+                                    accel_x = (dataConvert[6] << 8) | dataConvert[7];
+                                    accel_y = (dataConvert[8] << 8) | dataConvert[9];
+                                    accel_z = (dataConvert[10] << 8) | dataConvert[11];
+
+                                    //String leftbarcolor = "#5900FF22";
+                                    //String rightbarcolor = "#5900FF22";
+                                    //String centerbarcolor = "#5900FF22";
+
+                                    if(dist_1 >= 7)
+                                    {
+                                        leftbarcolor = "#5900FF22";
+                                    }
+
+                                    if(dist_1 < 7 && dist_1 > 3)
+                                    {
+                                        leftbarcolor = "#59FFC400";
+                                    }
+
+                                    if(dist_1 < 4)
+                                    {
+                                        leftbarcolor = "#59ff0000";
+                                    }
+
+                                    if(dist_2 >= 7)
+                                    {
+                                        rightbarcolor = "#5900FF22";
+                                    }
+
+                                    if(dist_2 < 7 && dist_2 > 3)
+                                    {
+                                        rightbarcolor = "#59FFC400";
+                                    }
+
+                                    if(dist_2 < 4)
+                                    {
+                                        rightbarcolor = "#59ff0000";
+                                    }
+
+                                    if(dist_3 >= 7)
+                                    {
+                                        centerbarcolor = "#5900FF22";
+                                    }
+
+                                    if(dist_3 < 7 && dist_3 > 3)
+                                    {
+                                        centerbarcolor = "#59FFC400";
+                                    }
+
+                                    if(dist_3 < 4)
+                                    {
+                                        centerbarcolor = "#59ff0000";
+                                    }
+//                                    byteCount = 0;
+//                                    int dist_1, dist_2, dist_3;
+//
+//                                    int[] dataConvert = new int[byteBuffer2.length];
+//
+//
+//                                    for(int w = 0; w < byteBuffer2.length; w++)
+//                                    {
+//                                        dataConvert[w] = (int)byteBuffer2[w] & 0xff;
+//                                    }
+//                                    dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+//                                    String test = Integer.toString(dist_1);
+
+
+                                 // TMFrame p = new TMFrame(byteBuffer2);
+
+                                }
+
+
+                            }
+
+
+
+                        }
+                    }
+                    catch (IOException ex)
+                    {
+                        System.out.println("I am a failure");
+                        stopWorker = true;
+                    }
+                }
+
+            }
+            catch (IOException ex) { }
+             return null;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //update ui here
+            leftBar.setBackgroundColor(Color.parseColor(leftbarcolor));
+            rightBar.setBackgroundColor(Color.parseColor(rightbarcolor));
+            centerBar.setBackgroundColor(Color.parseColor(centerbarcolor));
+
+            //red color is #59ff0000
+            // yellow color is #59FFC400
+            // green color is #5900FF22
+        }
+    }
+
 
 //    @Override
 //    public void onClick(View v)

@@ -50,6 +50,9 @@ public class BluetoothActivity extends Activity
     TextView value1;
     TextView value2;
     TextView value3;
+    TextView acc1;
+    TextView acc2;
+    TextView acc3;
 
 
     ListView myListView;
@@ -104,10 +107,13 @@ public class BluetoothActivity extends Activity
 //            accel_x = (dataConvert[6] << 8) | dataConvert[7];
 //            accel_y = (dataConvert[8] << 8) | dataConvert[9];
 //            accel_z = (dataConvert[10] << 8) | dataConvert[11];
+            accel_z = (byteBuffer2[0] << 4 | byteBuffer2[1] >> 4);
+            accel_z = (byteBuffer2[2] << 4 | byteBuffer2[3] >> 4);
+            accel_z =  (byteBuffer2[4] << 4 | byteBuffer2[5] >> 4);
 
-//            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
-//                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
-           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
+            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+//           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
             runOnUiThread(() -> updateText(strVals) );
         }
@@ -132,6 +138,11 @@ public class BluetoothActivity extends Activity
         value1 = (TextView)findViewById(R.id.value1);
         value2 = (TextView)findViewById(R.id.value2);
         value3 = (TextView)findViewById(R.id.value3);
+        acc1 = (TextView)findViewById(R.id.AccXData);
+        acc2 = (TextView)findViewById(R.id.accYData);
+        acc3 = (TextView)findViewById(R.id.accZData);
+        floatvalshow.setText("");
+
 
         //   myListView = (ListView)findViewById(R.id.floatList);
 
@@ -222,7 +233,14 @@ public class BluetoothActivity extends Activity
 
     void updateText(String[] a)
     {
-        floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
+       floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
+
+//        System.out.println("A[0] = " + a[0]);
+//        System.out.println("A[1] = " + a[1]);
+//        System.out.println("A[2] = " + a[2]);
+//        System.out.println("A[3] = " + a[3]);
+//        System.out.println("A[4] = " + a[4]);
+//        System.out.println("A[5] = " + a[5]);
 
         if(a[0] != "0")
             value1.setText(a[0]);
@@ -230,6 +248,12 @@ public class BluetoothActivity extends Activity
             value2.setText(a[1]);
         if(a[2] != "0")
             value3.setText(a[2]);
+
+        acc1.setText(a[3]);
+        acc2.setText(a[4]);
+        acc3.setText(a[5]);
+
+
 
 
 //        if(!a[0].equals("0") ) // Integer.parseInt(a[0]) < 150
@@ -298,10 +322,16 @@ public class BluetoothActivity extends Activity
                                 }
 
 
-                                if(byteCount > 5 && didI)
+                                if(byteCount > 11 && didI)
                                 {
                                     didI = false;
                                     byteCount = 0;
+//                                    System.out.println("Dyaln is gai first MSB in hex "+ Integer.toHexString(byteBuffer2[0]));
+//                                    System.out.println("Dyaln is gai first LSB in hex" + Integer.toHexString(byteBuffer2[1]));
+//                                    System.out.println("X " + (byteBuffer2[0] << 4 | byteBuffer2[1] >> 4));
+//                                    System.out.println("Y " + (byteBuffer2[2] << 4 | byteBuffer2[3] >> 4));
+//                                    System.out.println("Z " + (byteBuffer2[4] << 4 | byteBuffer2[5] >> 4));
+
 
                                     TMFrame p = new TMFrame(byteBuffer2);
 
