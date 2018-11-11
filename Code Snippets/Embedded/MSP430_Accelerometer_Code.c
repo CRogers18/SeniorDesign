@@ -8,6 +8,14 @@
 
 #include <msp430.h>
 #include <stdio.h>
+#include <stdint.h>
+
+
+void init_I2C();
+void init_UART();
+void mma_write(uint16_t baseAddress, uint8_t txData);
+uint8_t mma_read(uint16_t baseAddress);
+void OUTA_UART(uint8_t data);
 
 enum MMA8652_REGISTER {
     STATUS           = 0x00,
@@ -92,18 +100,22 @@ int main(void){
     init_I2C();
 
     //Initialize UART for bt
-    init_UART();
+    init_onboard_UART();
 
-    mma_write(ctrl_reg1 ,0x00);
+    OUTA_onboard_UART(0x1F);
+
+    mma_write(CTRL_REG1 ,0x00);
     //delay(10);
 
-    mma_write(xyz_data_cfg , 0x00); // 2G full range mode
+    mma_write(XYZ_DATA_CFG , 0x00); // 2G full range mode
     //delay(1);
 
-    mma_write(ctrl_reg1, 0x01); // Output data rate at 800Hz, no auto wake, no auto scale adjust, no fast read mode
+    mma_write(CTRL_REG1, 0x01); // Output data rate at 800Hz, no auto wake, no auto scale adjust, no fast read mode
     //delay(1);
 
     uint8_t xMSB, xLSB, yMSB, yLSB, zMSB, zLSB;
+
+    OUTA_onboard_UART(0x1F);
 
     while(1){
         xMSB = mma_read(0x01);
@@ -112,6 +124,15 @@ int main(void){
         yLSB = mma_read(0x04);
         zMSB = mma_read(0x05);
         zLSB = mma_read(0x06);
+
+//        OUTA_onboard_UART(xMSB);
+//        OUTA_onboard_UART(xLSB);
+        printf("%02x", xMSB);
+        fflush(stdout);
+
+
+
+        //__bis_SR_register(LPM3);        // Enter LPM0 w/ interrupts
 
     }
 //    while (1)
@@ -187,61 +208,119 @@ void init_UART()
     UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
 }
 
+void init_onboard_UART(){
+    // Configure GPIO
+    P2SEL1 |= BIT0 | BIT1;                    // USCI_A0 UART operation
+    P2SEL0 &= ~(BIT0 | BIT1);
 
-void mma_write(uint8_t register_address, uint8_t data)
+    // Configure USCI_A0 for UART mode
+    UCA0CTLW0 = UCSWRST;                      // Put eUSCI in reset
+    UCA0CTLW0 |= UCSSEL__SMCLK;               // CLK = SMCLK
+    // Baud Rate calculation
+    // 1000000/(16*9600) = 6
+    // User's Guide Table 21-4: UCBRSx = 0x04
+    // UCBRFx = int ( (52.083-52)*16) = 1
+    UCA0BR0 = 6;                             // 8000000/16/9600
+    UCA0BR1 = 0x00;
+    UCA0MCTLW |= UCOS16 | UCBRF_8;
+    UCA0CTLW0 &= ~UCSWRST;                    // Initialize eUSCI
+    UCA0IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
+}
+
+void OUTA_onboard_UART(uint8_t data){
+
+    // wait for the transmit buffer to be empty before sending data
+    do{}
+    while((UCA0IFG & 0x02) == 0);
+
+    // send the data to the transmit buffer
+    UCA0TXBUF = data;
+}
+
+//Output 8 bit char to UART
+void OUTA_UART(uint8_t data){
+
+    // wait for the transmit buffer to be empty before sending data
+    do{}
+    while((UCA1IFG & 0x02) == 0);
+
+    // send the data to the transmit buffer
+    UCA1TXBUF = data;
+}
+
+
+
+void mma_write(uint16_t baseAddress, uint8_t txData)
 {
-    UCB0CTLW0 |= UCTXSTT;         // I2C TX, start condition
-    while (UCB0CTLW0 & UCTXSTT);               // Start condition sent?
+    //Set USCI in Transmit mode
+    UCB0CTLW0 |= UCTR;
 
-    //Going to write to the accel
+    //Start Condition
+    UCB0CTLW0 |= UCTXSTT;
+
+    //Check for start condition
+    while(UCB0CTLW0 & UCTXSTT);
+
+    //Send that I want to write something
     UCB0TXBUF = 0x3A;
-    while ((IFG2 & UCB0TXIFG) == 0);
 
-    //This is the reg im going to write to
-    UCB0TXBUF = register_address;
-    while ((IFG2 & UCB0TXIFG) == 0);
+    //Send Reg to write to
+    UCB0TXBUF = baseAddress;
 
-    //This is what im going to write to that address
-    UCB0TXBUF = data;
-    while ((IFG2 & UCB0TXIFG) == 0);
+    //Send data to write
+    UCB0TXBUF = txData;
 
-    //Stop condition
-    UCB0CTLW0 |= UCTXSTP;            // No Repeated Start: stop condition
-    while (UCB0CTL1 & UCTXSTP);         // Check stop sent
+    //Send stop condition
+    UCB0CTLW0 |= UCTXSTP;
+
+    //Clear transmit interrupt flag before enabling interrupt again
+    UCB0IFG &= ~(UCTXIFG);
+
+    //Reinstate transmit interrupt enable
+    UCB0IE |= UCTXIE;
 }
 
 
-
-uint8_t mma_read(uint8_t register_address)
+uint8_t mma_read(uint16_t baseAddress)
 {
-    uint8_t result = 0xFF;
+    //Set USCI in Receive mode
+    UCB0CTLW0 &= ~UCTR;
 
-    UCB0CTLW0 |= UCTR + UCTXSTT;         // I2C TX, start condition
-    UCB0TXBUF = register_address;
-    while (UCB0CTLW0 & UCTXSTT);               // Start condition sent?
-    while ((IFG2 & UCB0TXIFG) == 0);
+    //Send start condition
+    UCB0CTLW0 |= UCTXSTT;
 
-    UCB0CTLW0 &= ~UCTR;  //Sets the master as a receiver
-    UCB0CTLW0 |= UCTXSTT;    //Start Condition sends address of slave
-    while (UCB0CTLW0 & UCTXSTT);         // Check start sent
+    //Poll for start condition transmission
+    while(UCB0CTLW0 & UCTXSTT);
 
-    UCB0CTLW0 |= UCTXSTP;            // No Repeated Start: stop condition
-    while ((IFG2 & UCB0RXIFG) == 0);
-    result = UCB0RXBUF;
-    IFG2 &= ~UCB0RXIFG;
+    //Im going to read a register
+    UCB0TXBUF = 0x3A;
 
-    while (UCB0CTLW0 & UCTXSTP);         // Check stop sent
+    //Going to read this reg data
+    UCB0TXBUF = baseAddress;
 
-    return result;
+    //Send REPEATED start condition
+    UCB0CTLW0 |= UCTXSTT;
+
+    //Im going to read a register
+    UCB0TXBUF = 0x3B;
+
+    //Poll for receive interrupt flag.
+    while (!(UCB0IFG & UCRXIFG));
+
+    //Send stop condition
+    UCB0CTLW0 |= UCTXSTP;
+
+    //Send single byte data.
+    return UCB0RXBUF;
 }
 
 
 
-#pragma vector = USCI_I2C_UCRXIFG0
-__interrupt void Accelerometer_Interrupt(void){
-    printf("check");
-    fflush(stdout);
-}
+//#pragma vector = USCI_I2C_UCRXIFG0
+//__interrupt void Accelerometer_Interrupt(void){
+//    printf("check");
+//    fflush(stdout);
+//}
 
 
 
