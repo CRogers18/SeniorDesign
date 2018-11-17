@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ import com.github.niqdev.mjpeg.DisplayMode;
 import com.github.niqdev.mjpeg.Mjpeg;
 import com.github.niqdev.mjpeg.MjpegView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.Override;
 import java.lang.Exception;
 import com.github.niqdev.mjpeg.Mjpeg;
@@ -44,6 +47,8 @@ import java.io.InputStream;
 import android.widget.AdapterView;
 
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.SQLOutput;
 import java.sql.SQLSyntaxErrorException;
 import java.util.Set;
@@ -87,6 +92,7 @@ public class DemoActivity extends AppCompatActivity {
     String leftbarcolor = "#5900FF22";
     String rightbarcolor = "#5900FF22";
     String centerbarcolor = "#5900FF22";
+    Button exit;
 
 
 
@@ -295,7 +301,7 @@ public class DemoActivity extends AppCompatActivity {
                             // bytesAvailable = 4
                             for(int i=0;i<bytesAvailable;i++)
                             {
-//                                System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
+//                               System.out.println("packetBytes[" + i +"]:  "+ packetBytes[i]);
 
 
                               //  byteBuffer[byteCount] = (packetBytes[i] & 0xff);
@@ -402,9 +408,12 @@ public class DemoActivity extends AppCompatActivity {
     void closeBT() throws IOException
     {
         stopWorker = true;
-        mmOutputStream.close();
-        mmInputStream.close();
-        mmSocket.close();
+        if(mmOutputStream!=null)
+            mmOutputStream.close();
+        if(mmInputStream!=null)
+            mmInputStream.close();
+        if(mmSocket!=null)
+            mmSocket.close();
        // myLabel.setText("Bluetooth Closed");
         System.out.println("Bluetooth closed");
     }
@@ -421,7 +430,7 @@ public class DemoActivity extends AppCompatActivity {
     TextView left;
     TextView right;
     TextView center;
-    Button exit;
+//    Button exit;
     Button bluetooth;
     WebView webView;
 
@@ -437,11 +446,13 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // your code
+
         setContentView(R.layout.activity_demo);
         getSupportActionBar().hide();
         leftBar = (View)findViewById(R.id.leftBar);
         rightBar = (View)findViewById(R.id.rightBar);
         centerBar = (View)findViewById(R.id.middleBar);
+        exit = (Button)findViewById(R.id.closeing);
 
 
         //red color is #59ff0000
@@ -452,7 +463,7 @@ public class DemoActivity extends AppCompatActivity {
         //videoView = (VideoView)findViewById(R.id.videoView);
        //- btnPlayPause = (ImageButton)findViewById(R.id.btn_play_pause);
         //btnPlayPause.setOnClickListener(this);
-//        mjpegView = (MjpegView)findViewById(R.id.VIEW_NAME);
+        mjpegView = (MjpegView)findViewById(R.id.VIEW_NAME);
 //        left = (TextView)findViewById(R.id.left);
 //        right = (TextView)findViewById(R.id.right);
 //        center = (TextView)findViewById(R.id.center);
@@ -463,26 +474,26 @@ public class DemoActivity extends AppCompatActivity {
         //distancetoback.setText("what");
         // distancetoback.setBackgroundColor()
         // distancetoback.setBackgroundColor(Color.parseColor("#55FF0000"));
-//        MjpegView viewer = (MjpegView) findViewById(R.id.mjpegview);
+//       MjpegView viewer = (MjpegView) findViewById(R.id.mjpegview);
 //        viewer.setMode(MjpegView.MODE_FIT_WIDTH);
 //        viewer.setAdjustHeight(true);
 //        viewer.setUrl("http://192.168.4.1:8080/?action=stream");
 //        viewer.startStream();
 
-//        exit.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                try {
-//                    if(mmOutputStream != null && mmInputStream!=null && mmSocket!= null)
-//                    closeBT();
-//                }
-//                catch (IOException ex) { }
-//
-//                Intent Home = new Intent(DemoActivity.this, MainMenuActivity.class);
-//                DemoActivity.this.startActivity(Home);
-//            }
-//        });
+        exit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                try {
+
+                    closeBT();
+                }
+                catch (IOException ex) { }
+
+                Intent Home = new Intent(DemoActivity.this, navigationFun.class);
+                DemoActivity.this.startActivity(Home);
+            }
+        });
 //
 //        bluetooth.setOnClickListener(new View.OnClickListener() {
 //
@@ -549,73 +560,87 @@ public class DemoActivity extends AppCompatActivity {
 //        catch (IOException ex) { }
 
        // startVideo();
-
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.loadUrl("http://192.168.4.1:8080/?action=stream");
-
-
-//                Mjpeg.newInstance()
-//                .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
-//                .subscribe(inputStream -> {
-//                    mjpegView.setSource(inputStream);
-//                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
-//                    mjpegView.showFps(true);
-//                    mjpegView.flipVertical(true);
 //
-//                },throwable -> {
-//                    Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
-//                    Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
-//                });
+//        webView.getSettings().setLoadWithOverviewMode(true);
+//        webView.getSettings().setUseWideViewPort(true);
+//        webView.loadUrl("http://192.168.4.1:8080/?action=stream");
+
+
+
+                Mjpeg.newInstance()
+                .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
+                .subscribe(inputStream -> {
+                    mjpegView.setSource(inputStream);
+                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
+                    mjpegView.showFps(true);
+                    mjpegView.flipVertical(true);
+
+                },throwable -> {
+                    Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+                    Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
+                });
       //  MjpegView viewer = (MjpegView) findViewById(R.id.mjpegview);
       //  mjpegView.setMode(MjpegView.MODE_FIT_WIDTH);
       //  mjpegView.setAdjustHeight(true);
        // mjpegView.setUrl("http://www.example.com/mjpeg.php?id=1234");
        // mjpegView.getSurfaceView()
 
-        new LongRunningTask().execute();
+       new LongRunningTask().execute();
 
 
     }
+
     private class LongRunningTask extends AsyncTask<Void, Void, Void>{
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+//            findBT();
+//            try {
+//                openBT();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             try
             {
-                mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if(mBluetoothAdapter == null)
-                {
-                    //myLabel.setText("No bluetooth adapter available");
-                    System.out.println("No bluetooth adapter available");
-                }
+                if(mBluetoothAdapter ==null) {
+                    System.out.println("test2");
+                    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (mBluetoothAdapter == null) {
+                        //myLabel.setText("No bluetooth adapter available");
+                        System.out.println("No bluetooth adapter available");
+                    }
 
-                if(!mBluetoothAdapter.isEnabled())
-                {
-                    Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBluetooth, 0);
-                }
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBluetooth, 0);
+                    }
 
-                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-                if(pairedDevices.size() > 0)
-                {
-                    for(BluetoothDevice device : pairedDevices)
-                    {
-                        if(device.getName().equals("HC-06"))
-                        {
-                            mmDevice = device;
-                            break;
+                    Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+                    if (pairedDevices.size() > 0) {
+                        for (BluetoothDevice device : pairedDevices) {
+                            if (device.getName().equals("HC-06")) {
+                                mmDevice = device;
+                                break;
+                            }
                         }
                     }
                 }
                 UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
-                mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-                mmSocket.connect();
-                mmOutputStream = mmSocket.getOutputStream();
-                mmInputStream = mmSocket.getInputStream();
+               if(mmSocket==null) {
+                   System.out.println("test 1");
+                   mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+                   //if(mmSocket==null)
+                   mmSocket.connect();
+//                if(mmOutputStream==null)
+                   mmOutputStream = mmSocket.getOutputStream();
+                   mmInputStream = mmSocket.getInputStream();
 
+               }
+               // System.out.println("Bluetooth Opened");
+             //  String msg = "0xBB";
+               // mmOutputStream.write(msg.getBytes());
 
-                System.out.println("Bluetooth Opened");
                 stopWorker = false;
 
                 readBufferPosition = 0;
@@ -623,6 +648,7 @@ public class DemoActivity extends AppCompatActivity {
                 boolean didI = false;
                 while(!stopWorker)
                 {
+//                    System.out.println("test3");
                     try
                     {
                         int bytesAvailable = mmInputStream.available();
@@ -677,50 +703,59 @@ public class DemoActivity extends AppCompatActivity {
                                     //String rightbarcolor = "#5900FF22";
                                     //String centerbarcolor = "#5900FF22";
 
-                                    if(dist_1 >= 7)
+                                    //green
+                                    if(dist_1 >= 120)
                                     {
                                         leftbarcolor = "#5900FF22";
                                     }
 
-                                    if(dist_1 < 7 && dist_1 > 3)
+                                    if(dist_1 < 120 && dist_1 > 50)
                                     {
                                         leftbarcolor = "#59FFC400";
                                     }
 
-                                    if(dist_1 < 4)
+                                    //red
+                                    if(dist_1 < 50)
                                     {
                                         leftbarcolor = "#59ff0000";
                                     }
 
-                                    if(dist_2 >= 7)
+                                    if(dist_2 >= 120)
                                     {
                                         rightbarcolor = "#5900FF22";
                                     }
 
-                                    if(dist_2 < 7 && dist_2 > 3)
+                                    if(dist_2 < 120 && dist_2 > 50)
                                     {
                                         rightbarcolor = "#59FFC400";
                                     }
 
-                                    if(dist_2 < 4)
+                                    if(dist_2 < 50)
                                     {
                                         rightbarcolor = "#59ff0000";
                                     }
 
-                                    if(dist_3 >= 7)
+                                    if(dist_3 >= 120)
                                     {
                                         centerbarcolor = "#5900FF22";
                                     }
 
-                                    if(dist_3 < 7 && dist_3 > 3)
+                                    if(dist_3 < 120 && dist_3 > 50)
                                     {
                                         centerbarcolor = "#59FFC400";
                                     }
 
-                                    if(dist_3 < 4)
+                                    if(dist_3 < 50)
                                     {
                                         centerbarcolor = "#59ff0000";
                                     }
+                                    //break;
+                                    stopWorker = true;
+//                                    try {
+//                                        TimeUnit.SECONDS.sleep(1);
+//                                    } catch (InterruptedException e) {
+//                                        e.printStackTrace();
+//                                    }
 //                                    byteCount = 0;
 //                                    int dist_1, dist_2, dist_3;
 //
@@ -757,16 +792,21 @@ public class DemoActivity extends AppCompatActivity {
             catch (IOException ex) { }
              return null;
 
-
+//            return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             //update ui here
+//            System.out.println("do it make it here?");
             leftBar.setBackgroundColor(Color.parseColor(leftbarcolor));
             rightBar.setBackgroundColor(Color.parseColor(rightbarcolor));
             centerBar.setBackgroundColor(Color.parseColor(centerbarcolor));
+
+
+
+            new LongRunningTask().execute();
 
             //red color is #59ff0000
             // yellow color is #59FFC400

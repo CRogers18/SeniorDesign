@@ -6,7 +6,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!--<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />-->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" /> -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,29 +20,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DemoActivity"
+        <activity
+            android:name=".MainActivity3"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            >
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-
-        <activity android:name=".BackUpCamera"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-
-        <activity android:name=".bluetoothLearning"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-
-        <activity android:name=".BluetoothActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-
-        <activity android:name=".MainMenuActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".BackUpCamera"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".bluetoothLearning"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".navigationFun"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".MainMenuActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".DemoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MainActivity2" />
+        <activity android:name=".BluetoothDataService"></activity>
 
     </application>
 

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.niqdev:mjpeg-view-1.4.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mjpeg-view-1.4.0.aar/65ba5e60cbe8b223b60385b123a675ce/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mjpeg-view-1.4.0.aar/65ba5e60cbe8b223b60385b123a675ce/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.niqdev/mjpeg-view/1.4.0/df4a9fb112225622e568a9fcf4ddcb68d138bdc4/mjpeg-view-1.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
