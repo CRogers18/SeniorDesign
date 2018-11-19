@@ -118,16 +118,16 @@ public class BluetoothActivity extends Activity
             dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
 //            System.out.println("Val3: " + dist_3);
 
-//            accel_x = (dataConvert[6] << 8) | dataConvert[7];
-//            accel_y = (dataConvert[8] << 8) | dataConvert[9];
-//            accel_z = (dataConvert[10] << 8) | dataConvert[11];
+            accel_x = (dataConvert[6] << 8) | dataConvert[7];
+            accel_y = (dataConvert[8] << 8) | dataConvert[9];
+            accel_z = (dataConvert[10] << 8) | dataConvert[11];
 //            accel_z = (byteBuffer2[0] << 4 | byteBuffer2[1] >> 4);
 //            accel_z = (byteBuffer2[2] << 4 | byteBuffer2[3] >> 4);
 //            accel_z =  (byteBuffer2[4] << 4 | byteBuffer2[5] >> 4);
 
-//            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
-//                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
-           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
+            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+//           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
             runOnUiThread(() -> updateText(strVals) );
         }
@@ -156,21 +156,21 @@ public class BluetoothActivity extends Activity
         acc2 = (TextView)findViewById(R.id.accYData);
         acc3 = (TextView)findViewById(R.id.accZData);
         floatvalshow.setText("");
-        mjpegView = (MjpegView)findViewById(R.id.VIEW_NAME);
+//        mjpegView = (MjpegView)findViewById(R.id.VIEW_NAME);
 
 
-        Mjpeg.newInstance()
-                .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
-                .subscribe(inputStream -> {
-                    mjpegView.setSource(inputStream);
-                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
-                    mjpegView.showFps(true);
-                    mjpegView.flipVertical(true);
-
-                },throwable -> {
-                    Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
-                    Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
-                });
+//        Mjpeg.newInstance()
+//                .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
+//                .subscribe(inputStream -> {
+//                    mjpegView.setSource(inputStream);
+//                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
+//                    mjpegView.showFps(true);
+//                    mjpegView.flipVertical(true);
+//
+//                },throwable -> {
+//                    Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+//                    Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
+//                });
 
         helpme = new TimerTask() {
 
@@ -197,12 +197,12 @@ public class BluetoothActivity extends Activity
                                 if(dataByte == 0x1F)
                                 {
                                     // Skip the 2 header bytes and discard them
-                                    bytesSkipped = (short) mmInputStream.skip(1);
+                                    bytesSkipped = (short) mmInputStream.skip(2);
 
-                                    if(bytesSkipped == 1)
+                                    if(bytesSkipped == 2)
                                     {
                                         // Start reading to get the data from the next 12 bytes
-                                        bytesRead = (short) mmInputStream.read(dataBuffer, 0, 5);
+                                        bytesRead = (short) mmInputStream.read(dataBuffer, 0, 12);
                                     }
 
                                     // Situation where header was at the end of the data in the buffer
@@ -210,7 +210,7 @@ public class BluetoothActivity extends Activity
                                         bytesRead = 0;
 
                                     // If it read 12 bytes, we have enough for a full frame
-                                    if(bytesRead == 5)
+                                    if(bytesRead == 12)
                                     {
                                         TMFrame dataFrame = new TMFrame(dataBuffer);
                                     }
@@ -327,15 +327,15 @@ public class BluetoothActivity extends Activity
 //        System.out.println("A[5] = " + a[5]);
 
 //        if(a[0] != "0")
-//            value1.setText(a[0]);
+            value1.setText(a[0]);
 //        if(a[1] != "0")
-//            value2.setText(a[1]);
+            value2.setText(a[1]);
 //        if(a[2] != "0")
-//            value3.setText(a[2]);
+            value3.setText(a[2]);
 
-//        acc1.setText(a[3]);
-//        acc2.setText(a[4]);
-//        acc3.setText(a[5]);
+        acc1.setText(a[3]);
+        acc2.setText(a[4]);
+        acc3.setText(a[5]);
 
 
 

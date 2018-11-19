@@ -7,13 +7,6 @@
     tools:ignore="TextFields,HardcodedText">
 
 
-    <com.github.niqdev.mjpeg.MjpegSurfaceView
-        android:id="@+id/VIEW_NAME"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        stream:type="stream_default" />
-
     <TextView
         android:id="@+id/accYData"
         android:layout_width="wrap_content"
@@ -184,6 +177,13 @@
         android:layout_marginTop="0dp"
         android:text="off"
         android:textSize="18sp" />
+
+    <!--<com.github.niqdev.mjpeg.MjpegSurfaceView-->
+        <!--android:id="@+id/VIEW_NAME"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--stream:type="stream_default" />-->
 
 
 </RelativeLayout>

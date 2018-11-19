@@ -65,7 +65,7 @@ public class DebugFragment extends Fragment {
     public class TMFrame
     {
         int dist_1, dist_2, dist_3;
-        float accel_x, accel_y, accel_z;
+        int accel_x, accel_y, accel_z;
 
         // Instantiate the class with data and the text is automatically updated in the UI
         public TMFrame(byte[] packetData)
@@ -84,7 +84,7 @@ public class DebugFragment extends Fragment {
             //  System.out.println("before divide: " + (((dataConvert[0] )<< 8) | dataConvert[1]));
             //System.out.println("Second before divide: " + (((dataConvert[1] )<< 8) | dataConvert[0]));
 
-            dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+//            dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
             //float whatever = (float)dist_1 / (float)58;
             //dist_1 = whatever;
             //System.out.println("whatever: " + whatever);
@@ -92,25 +92,57 @@ public class DebugFragment extends Fragment {
             // System.out.println("Data3: " + dataConvert[3] + " Data2: " + dataConvert[2]);
             // System.out.println("Val1: " + dist_1);
 
-            dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+//            dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
 //            System.out.println("Data5: " + dataConvert[5] + " Data4: " + dataConvert[4]);
 //            System.out.println("Val2: " + dist_2);
 //
 //
-            dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+//            dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
 //            System.out.println("Val3: " + dist_3);
 
-//            accel_x = (dataConvert[6] << 8) | dataConvert[7];
-//            accel_y = (dataConvert[8] << 8) | dataConvert[9];
-//            accel_z = (dataConvert[10] << 8) | dataConvert[11];
-          //  accel_z = (byteBuffer2[0] << 4 | byteBuffer2[1] >> 4);
+        //    accel_x = (dataConvert[6] << 8) | dataConvert[7];
+         //   accel_y = (dataConvert[8] << 8) | dataConvert[9];
+           // accel_z = (dataConvert[10] << 8) | dataConvert[11];
+
+//                accel_x = (dataConvert[0] << 4) | dataConvert[1] >>4;
+//               accel_y = (dataConvert[2] << 4) | dataConvert[3]>>4;
+//             accel_z = (dataConvert[4] << 4) | dataConvert[5]>>4;
+
+            //dylan slack code 1
+            accel_x = (dataConvert[1]|(dataConvert[0]<<8))>>6;
+
+            if (accel_x>0x01FF)
+            {
+                accel_x=(((~accel_x)+1)-0xFC00);
+            }
+
+            accel_y = (dataConvert[3]|(dataConvert[2]<<8))>>6;
+            if (accel_y>0x01FF)
+            {
+                accel_y=(((~accel_y)+1)-0xFC00);
+            }
+
+            accel_z = (dataConvert[5]|(dataConvert[4]<<8))>>6;
+            if (accel_z>0x01FF)
+            {
+                accel_z=(((~accel_z)+1)-0xFC00);
+            }
+
+
+
+
+
+            //  accel_z = (byteBuffer2[0] << 4 | byteBuffer2[1] >> 4);
           //  accel_z = (byteBuffer2[2] << 4 | byteBuffer2[3] >> 4);
           //  accel_z =  (byteBuffer2[4] << 4 | byteBuffer2[5] >> 4);
 
-//            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
-//                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
-           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
+          //  final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+                //    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+//           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
+              final String[] strVals = {
+                Integer.toString(accel_x),  Integer.toString(accel_y),  Integer.toString(accel_z) };
+
             getActivity().runOnUiThread(() -> updateText(strVals) );
         }
     }
@@ -233,7 +265,7 @@ public class DebugFragment extends Fragment {
 
     void updateText(String[] a)
     {
-        floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
+//        floatvalshow.setText("Ultrasonic 1: " + a[0] + "\nUltrasonic 2: " + a[1] + "\nUltrasonic 3: " + a[2] );
 
 //        System.out.println("A[0] = " + a[0]);
 //        System.out.println("A[1] = " + a[1]);
@@ -242,12 +274,16 @@ public class DebugFragment extends Fragment {
 //        System.out.println("A[4] = " + a[4]);
 //        System.out.println("A[5] = " + a[5]);
 
-//        if(a[0] != "0")
-            value1.setText(a[0]);
-//        if(a[1] != "0")
-            value2.setText(a[1]);
-//        if(a[2] != "0")
-            value3.setText(a[2]);
+////        if(a[0] != "0")
+//            value1.setText(a[0]);
+////        if(a[1] != "0")
+//            value2.setText(a[1]);
+////        if(a[2] != "0")
+//            value3.setText(a[2]);
+
+        acc1.setText(a[0]);
+        acc2.setText(a[1]);
+        acc3.setText(a[2]);
 
 //        acc1.setText(a[3]);
 //        acc2.setText(a[4]);

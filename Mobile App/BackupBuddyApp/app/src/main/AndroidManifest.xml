@@ -21,9 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity3"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="landscape">
+            android:name=".navigationFun"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +39,7 @@
             android:name=".bluetoothLearning"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-            android:name=".navigationFun"
+            android:name=".MjpegActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".MainMenuActivity"
@@ -50,8 +49,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape" />
         <activity android:name=".MainActivity2" />
-        <activity android:name=".BluetoothDataService"></activity>
-
+        <activity android:name=".BluetoothDataService" />
+        <activity android:name=".onlineactivity" />
+        <activity android:name=".MainActivity3" />
+        <activity android:name=".internet" />
+        <activity android:name=".VideoPlayerActivity"></activity>
     </application>
 
 </manifest>
