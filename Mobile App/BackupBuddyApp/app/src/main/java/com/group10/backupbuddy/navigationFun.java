@@ -33,7 +33,7 @@ public class navigationFun extends AppCompatActivity {
         homeFragment = new HomeFragment();
         debugFragment = new DebugFragment();
         videoFragment = new VideoFragment();
-        settingsFragment = new SettingsFragment();
+//        settingsFragment = new SettingsFragment();
 //        int i = 0;
 //        i = getIntent().getExtras().getInt("frgToLoad");
 //        if(i == 1)
@@ -60,10 +60,10 @@ public class navigationFun extends AppCompatActivity {
                         return true;
 
 
-                    case R.id.nav_settings:
+//                    case R.id.nav_settings:
 //                        MainNav.setItemBackgroundResource(R.color.colorPrimaryDark);
-                        setFragment(settingsFragment);
-                        return true;
+//                        setFragment(settingsFragment);
+//                        return true;
 
                     case R.id.nav_videos:
                         setFragment(videoFragment);

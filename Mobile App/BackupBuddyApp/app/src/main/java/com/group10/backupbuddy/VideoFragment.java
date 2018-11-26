@@ -83,9 +83,9 @@ public class VideoFragment extends Fragment {
 
     public void Login(){
 
-        String url = "http://10.0.2.2/testing.php";
+//        String url = "http://10.0.2.2/testing.php";
         // This bottom url is for pi
-//        String url = "http://192.168.4.1/testing.php";
+        String url = "http://192.168.4.1/testing.php";
 //        url = "https://api.myjson.com/bins/kp9wz";
         RequestQueue rq = Volley.newRequestQueue(getContext());
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -102,8 +102,8 @@ public class VideoFragment extends Fragment {
                     for(int i = 0; i < jsonArray.length(); i++)
                     {
                         // this url is for pi
-                        //String base = "http://192.168.4.1/";
-                        String base = "http://10.0.2.2/";
+                        String base = "http://192.168.4.1/";
+//                        String base = "http://10.0.2.2/";
 //                        JSONObject employee = jsonArray.getJSONObject(i);
 //                        String test = employee.getString("mail");
                         System.out.println("values are here "+jsonArray.get(i));
@@ -172,7 +172,7 @@ public class VideoFragment extends Fragment {
     }
 
     private void GetVideos(){
-        String url = "http://passwords.aisoftworks.net/fetchAll.php";
+//        String url = "http://passwords.aisoftworks.net/fetchAll.php";
 //        RequestQueue rq = Volley.newRequestQueue(this);
 //        HashMap<String, String> parameters = new HashMap<String, String>();
 //        Intent temp = getIntent(); // gets the previously created intent

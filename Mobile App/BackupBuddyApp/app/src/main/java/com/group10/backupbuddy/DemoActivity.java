@@ -315,6 +315,10 @@ public class DemoActivity extends AppCompatActivity {
                                     //System.out.println("eat my whole ass");
                                     byteCount = 0;
                                 }
+                                if(packetBytes[i] == 0xbb)
+                                {
+
+                                }
 
 
                                 if(byteCount > 5 && didI)
@@ -398,10 +402,10 @@ public class DemoActivity extends AppCompatActivity {
     void sendData() throws IOException
     {
         //String msg = myTextbox.getText().toString();
-        String msg = "W";
+//        String msg = "W";
         //msg += "\n";
-        mmOutputStream.write(msg.getBytes());
-        System.out.println("Data Sent");
+        mmOutputStream.write(0xBB);
+//        System.out.println("Data Sent");
        // myLabel.setText("Data Sent");
     }
 
@@ -488,6 +492,12 @@ public class DemoActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+
+                try {
+                    sendData();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 try {
 
                     closeBT();
@@ -650,6 +660,7 @@ public class DemoActivity extends AppCompatActivity {
                 readBufferPosition = 0;
                 readBuffer = new byte[1024];
                 boolean didI = false;
+                boolean turn = true;
                 while(!stopWorker)
                 {
 //                    System.out.println("test3");
@@ -674,6 +685,24 @@ public class DemoActivity extends AppCompatActivity {
                                     //System.out.println("eat my whole ass");
                                     byteCount = 0;
                                 }
+                                if(packetBytes[i] == 0xbb && turn)
+                                {
+                                    closeBT();
+
+                                    Intent Home = new Intent(DemoActivity.this, navigationFun.class);
+                                    DemoActivity.this.startActivity(Home);
+                                }
+                                else
+                                    turn = false;
+
+                                if(packetBytes[i] == 0xbb)
+                                {
+
+                                    turn = true;
+//                                    turn++;
+                                }
+
+
 
 
                                 if(byteCount > 5 && didI)

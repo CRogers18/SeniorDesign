@@ -15,16 +15,16 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/bg" />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/settingIcon"-->
-        <!--android:layout_width="49dp"-->
-        <!--android:layout_height="45dp"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.07"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:srcCompat="@drawable/settings_old" />-->
+    <ImageView
+        android:id="@+id/settingIcon"
+        android:layout_width="49dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/settings_old" />
 
     <LinearLayout
         android:layout_width="300dp"
@@ -80,6 +80,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.425" />
 
+    <Button
+        android:id="@+id/security"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Arm Security"
+        tools:layout_editor_absoluteX="119dp"
+        tools:layout_editor_absoluteY="404dp" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -167,7 +167,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         Context c = MainMenuActivity.getAppContext();
 
         // Gets application context and saves settings
-        SharedPreferences userPrefs = c.getSharedPreferences("UserSettings", 0);
+        SharedPreferences userPrefs = getApplicationContext().getSharedPreferences("UserSettings", 0);
         SharedPreferences.Editor edit = userPrefs.edit();
         edit.putBoolean("btEnable", btEnabled);
         edit.putBoolean("btIsDiscover", isDicoverable);
@@ -185,10 +185,14 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         getSupportActionBar().hide();
         setContentView(R.layout.activity_settings);
 
-        Context c = MainMenuActivity.getAppContext();
+//        Context c = MainMenuActivity.getAppContext();
+//        navigationFun.getAppContext();
+//        navigationFun.getActivity();
+//        c = HomeFragment.getContext();
+
 
         // Gets application context and saves settings
-        SharedPreferences userPrefs = c.getSharedPreferences("UserSettings", 0);
+        SharedPreferences userPrefs = getApplicationContext().getSharedPreferences("UserSettings", 0);
 
         btEnabled = userPrefs.getBoolean("btEnable", false);
         isDicoverable = userPrefs.getBoolean("btIsDiscover", false);
