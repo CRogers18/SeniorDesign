@@ -84,7 +84,9 @@ public class DebugFragment extends Fragment {
             //  System.out.println("before divide: " + (((dataConvert[0] )<< 8) | dataConvert[1]));
             //System.out.println("Second before divide: " + (((dataConvert[1] )<< 8) | dataConvert[0]));
 
-//            dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+            dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
+            dist_1 = ((dataConvert[1] << 8) | dataConvert[0]) / 58;
+
             //float whatever = (float)dist_1 / (float)58;
             //dist_1 = whatever;
             //System.out.println("whatever: " + whatever);
@@ -92,12 +94,16 @@ public class DebugFragment extends Fragment {
             // System.out.println("Data3: " + dataConvert[3] + " Data2: " + dataConvert[2]);
             // System.out.println("Val1: " + dist_1);
 
-//            dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+            dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
+            dist_2 = ((dataConvert[3] << 8) | dataConvert[2]) / 58;
+
 //            System.out.println("Data5: " + dataConvert[5] + " Data4: " + dataConvert[4]);
 //            System.out.println("Val2: " + dist_2);
 //
 //
-//            dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+            dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
+            dist_3 = ((dataConvert[5] << 8) | dataConvert[4]) / 58;
+
 //            System.out.println("Val3: " + dist_3);
 
         //    accel_x = (dataConvert[6] << 8) | dataConvert[7];
@@ -136,12 +142,12 @@ public class DebugFragment extends Fragment {
           //  accel_z = (byteBuffer2[2] << 4 | byteBuffer2[3] >> 4);
           //  accel_z =  (byteBuffer2[4] << 4 | byteBuffer2[5] >> 4);
 
-          //  final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
-                //    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
 //           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
-              final String[] strVals = {
-                Integer.toString(accel_x),  Integer.toString(accel_y),  Integer.toString(accel_z) };
+//              final String[] strVals = {
+//                Integer.toString(accel_x),  Integer.toString(accel_y),  Integer.toString(accel_z) };
 
             getActivity().runOnUiThread(() -> updateText(strVals) );
         }
@@ -251,13 +257,16 @@ public class DebugFragment extends Fragment {
     void openBT() throws IOException
     {
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
-        mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-        mmSocket.connect();
-        mmOutputStream = mmSocket.getOutputStream();
-        mmInputStream = mmSocket.getInputStream();
+//        if(mmSocket==null) {
+            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            mmSocket.connect();
+//            if(mmOutputStream ==null)
+                mmOutputStream = mmSocket.getOutputStream();
+//            if(mmInputStream == null)
+                mmInputStream = mmSocket.getInputStream();
 
-        beginListenForData();
-
+            beginListenForData();
+//        }
         myLabel.setText("Bluetooth Opened");
     }
 
@@ -274,16 +283,16 @@ public class DebugFragment extends Fragment {
 //        System.out.println("A[4] = " + a[4]);
 //        System.out.println("A[5] = " + a[5]);
 
-////        if(a[0] != "0")
-//            value1.setText(a[0]);
-////        if(a[1] != "0")
-//            value2.setText(a[1]);
-////        if(a[2] != "0")
-//            value3.setText(a[2]);
+//        if(a[0] != "0")
+            value1.setText(a[0]);
+//        if(a[1] != "0")
+            value2.setText(a[1]);
+//        if(a[2] != "0")
+            value3.setText(a[2]);
 
-        acc1.setText(a[0]);
-        acc2.setText(a[1]);
-        acc3.setText(a[2]);
+        acc1.setText(a[3]);
+        acc2.setText(a[4]);
+        acc3.setText(a[5]);
 
 //        acc1.setText(a[3]);
 //        acc2.setText(a[4]);
@@ -326,12 +335,14 @@ public class DebugFragment extends Fragment {
                     {
                         int bytesAvailable = mmInputStream.available();
 
+
                         if(bytesAvailable > 0)
                         {
+                            System.out.println(bytesAvailable);
+
 
                             byte[] packetBytes = new byte[bytesAvailable];
                             mmInputStream.read(packetBytes);
-
 
 
                             for(int i=0;i<bytesAvailable;i++)
@@ -358,7 +369,7 @@ public class DebugFragment extends Fragment {
                                 }
 
 
-                                if(byteCount > 5 && didI)
+                                if(byteCount > 11 && didI)
                                 {
                                     didI = false;
                                     byteCount = 0;
@@ -404,10 +415,14 @@ public class DebugFragment extends Fragment {
 
     void closeBT() throws IOException
     {
+
         stopWorker = true;
-        mmOutputStream.close();
-        mmInputStream.close();
-        mmSocket.close();
+        if(mmOutputStream!=null)
+            mmOutputStream.close();
+        if(mmInputStream!=null)
+            mmInputStream.close();
+        if(mmSocket!=null)
+            mmSocket.close();
         myLabel.setText("Bluetooth Closed");
     }
 

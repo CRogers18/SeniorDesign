@@ -53,7 +53,9 @@
         <activity android:name=".onlineactivity" />
         <activity android:name=".MainActivity3" />
         <activity android:name=".internet" />
-        <activity android:name=".VideoPlayerActivity"></activity>
+        <activity android:name=".VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

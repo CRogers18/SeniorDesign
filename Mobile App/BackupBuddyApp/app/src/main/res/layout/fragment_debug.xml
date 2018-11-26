@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".DebugFragment">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/accYData"
@@ -11,8 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/AccXData"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="96dp"
+        android:layout_marginStart="8dp"
         android:text="OFF"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/accY" />
 
     <TextView
         android:id="@+id/AccXData"
@@ -20,8 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/accZData"
         android:layout_alignTop="@+id/accX"
+        android:layout_marginBottom="96dp"
+        android:layout_marginStart="8dp"
         android:text="OFF"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/accX" />
 
     <TextView
         android:id="@+id/Ultrasonic3"
@@ -29,9 +36,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="164dp"
+        android:layout_marginBottom="212dp"
+        android:layout_marginStart="16dp"
         android:text="Ultrasonic3:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/Ultrasonic2"
@@ -39,9 +49,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="220dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
         android:text="Ultrasonic2:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/Ultrasonic3"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/value2"
@@ -49,23 +62,42 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/Ultrasonic2"
-        android:layout_marginStart="120dp"
+        android:layout_marginBottom="252dp"
+        android:layout_marginStart="36dp"
         android:text="OFF"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Ultrasonic2" />
 
     <TextView
         android:id="@+id/label"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="349dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:text="Type here:"
-        android:textSize="29sp" />
+        android:textSize="29sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/entry"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/label"
-        android:background="@android:drawable/editbox_background" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/editbox_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label" />
 
     <Button
         android:id="@+id/open"
@@ -73,31 +105,52 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/entry"
-        android:layout_marginLeft="10dip"
-        android:text="Open" />
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="100dp"
+        android:text="Open"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/open"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="100dp"
         android:layout_toLeftOf="@id/open"
-        android:text="Send" />
+        android:text="Send"
+        app:layout_constraintEnd_toStartOf="@+id/open"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/send"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
         android:layout_toLeftOf="@id/send"
-        android:text="Close" />
+        android:text="Close"
+        app:layout_constraintEnd_toStartOf="@+id/send"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/label2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="10dp"
         android:layout_below="@id/close"
-        android:textSize="32sp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/value1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/send"
+        app:layout_constraintVertical_bias="0.375" />
 
     <TextView
         android:id="@+id/Ultrasonic1"
@@ -105,9 +158,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="208dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
         android:text="Ultrasonic1:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/Ultrasonic2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/value1"
@@ -115,8 +171,12 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/value2"
         android:layout_alignTop="@+id/Ultrasonic1"
+        android:layout_marginBottom="293dp"
+        android:layout_marginStart="36dp"
         android:text="OFF"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Ultrasonic1" />
 
     <TextView
         android:id="@+id/AccHeader"
@@ -124,9 +184,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="112dp"
+        android:layout_marginBottom="156dp"
+        android:layout_marginStart="4dp"
         android:text="Accelerometer:"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/accX"
@@ -134,18 +197,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="36dp"
+        android:layout_marginStart="16dp"
         android:text="X: "
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/accZ"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/accY"
-        android:layout_width="wrap_content"
+        android:layout_width="22dp"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/value2"
         android:layout_alignTop="@+id/accYData"
+        android:layout_marginBottom="96dp"
+        android:layout_marginStart="36dp"
         android:text="Y:"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/AccXData" />
 
     <TextView
         android:id="@+id/accZ"
@@ -153,9 +223,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="19dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="16dp"
         android:text="Z: "
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/accZData"
@@ -163,9 +236,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/accZ"
-        android:layout_marginStart="51dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
         android:text="OFF"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/accZ" />
 
     <TextView
         android:id="@+id/value3"
@@ -173,9 +249,198 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/value2"
         android:layout_alignTop="@+id/Ultrasonic3"
-        android:layout_marginTop="0dp"
+        android:layout_marginBottom="212dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="8dp"
         android:text="OFF"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Ultrasonic3"
+        app:layout_constraintTop_toBottomOf="@+id/value2"
+        app:layout_constraintVertical_bias="1.0" />
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context=".DebugFragment">-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/accYData"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignTop="@+id/AccXData"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:text="OFF"-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/AccXData"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/accZData"-->
+        <!--android:layout_alignTop="@+id/accX"-->
+        <!--android:text="OFF"-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/Ultrasonic3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginBottom="164dp"-->
+        <!--android:text="Ultrasonic3:"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/Ultrasonic2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginBottom="220dp"-->
+        <!--android:text="Ultrasonic2:"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/value2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignTop="@+id/Ultrasonic2"-->
+        <!--android:layout_marginStart="120dp"-->
+        <!--android:text="OFF"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/label"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Type here:"-->
+        <!--android:textSize="29sp" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/entry"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/label"-->
+        <!--android:background="@android:drawable/editbox_background" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/open"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_below="@id/entry"-->
+        <!--android:layout_marginLeft="10dip"-->
+        <!--android:text="Open" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/send"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignTop="@id/open"-->
+        <!--android:layout_toLeftOf="@id/open"-->
+        <!--android:text="Send" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/close"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignTop="@id/send"-->
+        <!--android:layout_toLeftOf="@id/send"-->
+        <!--android:text="Close" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/label2"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/close"-->
+        <!--android:textSize="32sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/Ultrasonic1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginTop="208dp"-->
+        <!--android:text="Ultrasonic1:"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/value1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/value2"-->
+        <!--android:layout_alignTop="@+id/Ultrasonic1"-->
+        <!--android:text="OFF"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/AccHeader"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginBottom="112dp"-->
+        <!--android:text="Accelerometer:"-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/accX"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginBottom="75dp"-->
+        <!--android:text="X: "-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/accY"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignEnd="@+id/value2"-->
+        <!--android:layout_alignTop="@+id/accYData"-->
+        <!--android:text="Y:"-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/accZ"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginBottom="19dp"-->
+        <!--android:text="Z: "-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/accZData"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignTop="@+id/accZ"-->
+        <!--android:layout_marginStart="51dp"-->
+        <!--android:text="OFF"-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/value3"-->
+        <!--android:layout_width="33dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/value2"-->
+        <!--android:layout_alignTop="@+id/Ultrasonic3"-->
+        <!--android:layout_marginTop="0dp"-->
+        <!--android:text="OFF"-->
+        <!--android:textSize="18sp" />-->
+
+
+<!--</RelativeLayout>-->

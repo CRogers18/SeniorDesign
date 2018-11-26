@@ -441,7 +441,11 @@ public class DemoActivity extends AppCompatActivity {
     //String videoUrl = "https://test.b-cdn.net/bunny_720p.m4v";
     String videoUrl = "http://192.168.4.1:8080/?action=stream";
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        System.out.println("this should be when we leave");
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

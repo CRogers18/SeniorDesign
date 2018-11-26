@@ -1,7 +1,10 @@
 package com.group10.backupbuddy;
 
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +28,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class internet extends AppCompatActivity {
 
@@ -44,6 +49,19 @@ public class internet extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2,150);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
+            }
+        }, 450);
+
+
+
 //        Uri uri = Uri.parse("https://i.imgur.com/Imu2Qp0.jpg");
         videoList.add(
                 new Video(
@@ -52,34 +70,7 @@ public class internet extends AppCompatActivity {
 
                 )
         );
-        videoList.add(
-                new Video(
-                        2,
-                        "help", "","4"
 
-                )
-        );
-        videoList.add(
-                new Video(
-                        2,
-                        "help", "","3"
-
-                )
-        );
-        videoList.add(
-                new Video(
-                        2,
-                        "help", "","2"
-
-                )
-        );
-        videoList.add(
-                new Video(
-                        2,
-                        "help", "","1"
-
-                )
-        );
 
         adapter = new VideoAdapter(this, videoList);
         recyclerView.setAdapter(adapter);
@@ -87,7 +78,7 @@ public class internet extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://localhost/testing.php";
+        String url ="http://10.0.2.2/testing.php";
 
 //// Request a string response from the provided URL.
 //        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -125,35 +116,59 @@ public class internet extends AppCompatActivity {
 
 // Add the request to the RequestQueue.
 //        queue.add(jsonObjectRequest);
-        Login();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Login();
+            }
+        }, 2000);
     }
 
 
     public void Login(){
 
-        String url = "http://127.0.0.1/testing.php";
-        url = "https://api.myjson.com/bins/kp9wz";
+        String url = "http://10.0.2.2/testing.php";
+//        url = "https://api.myjson.com/bins/kp9wz";
         RequestQueue rq = Volley.newRequestQueue(this);
         HashMap<String, String> parameters = new HashMap<String, String>();
       //  parameters.put("login", username.getText().toString().trim());
        // parameters.put("password", pass.getText().toString().trim());
 
-//        System.out.println("who");
+        System.out.println("who");
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    JSONArray jsonArray = response.getJSONArray("employees");
+                    JSONArray jsonArray = response.getJSONArray("results");
+                    System.out.println(jsonArray);
                     for(int i = 0; i < jsonArray.length(); i++)
                     {
-                        JSONObject employee = jsonArray.getJSONObject(i);
-                        String test = employee.getString("mail");
+                        String base = "http://10.0.2.2/";
+//                        JSONObject employee = jsonArray.getJSONObject(i);
+//                        String test = employee.getString("mail");
+                        System.out.println("values are here "+jsonArray.get(i));
+                        // id title image video
+                        String title = jsonArray.getString(i);
+                        title =  title.substring(0,title.length()-4);
+                        System.out.println("title: "+title);
+                        String image = title + ".jpg";
+                        image = base + image;
+                        System.out.println("image: "+image);
+                        String video2 = jsonArray.getString(i);
+                        video2 = base+video2;
+                        Video video = new Video(i,title,image,video2);
+                        videoList.add(video);
+
+
                     }
+                    adapter = new VideoAdapter(internet.this, videoList);
+                    recyclerView.setAdapter(adapter);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

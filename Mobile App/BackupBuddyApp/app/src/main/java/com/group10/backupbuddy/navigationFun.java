@@ -19,6 +19,7 @@ public class navigationFun extends AppCompatActivity {
     private HomeFragment homeFragment;
     private DebugFragment debugFragment;
     private VideoFragment videoFragment;
+    private SettingsFragment settingsFragment;
 //    private SettingsFragment;
 
     @Override
@@ -32,9 +33,15 @@ public class navigationFun extends AppCompatActivity {
         homeFragment = new HomeFragment();
         debugFragment = new DebugFragment();
         videoFragment = new VideoFragment();
-
-
-        setFragment(homeFragment);
+        settingsFragment = new SettingsFragment();
+//        int i = 0;
+//        i = getIntent().getExtras().getInt("frgToLoad");
+//        if(i == 1)
+//        {
+//            setFragment(videoFragment);
+//        }
+//        else
+         setFragment(homeFragment);
 
         MainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -55,6 +62,7 @@ public class navigationFun extends AppCompatActivity {
 
                     case R.id.nav_settings:
 //                        MainNav.setItemBackgroundResource(R.color.colorPrimaryDark);
+                        setFragment(settingsFragment);
                         return true;
 
                     case R.id.nav_videos:
