@@ -288,7 +288,7 @@ public class SettingsFragment extends Fragment {
         toggleBt = (Button) getView().findViewById(R.id.btToggleBtn);
         toggleDiscoverable = (Button) getView().findViewById(R.id.discoverToggleBtn);
         connect = (Button) getView().findViewById(R.id.btConnectBtn);
-        toggleGrid = (Button) getView().findViewById(R.id.gridToggleBtn);
+//        toggleGrid = (Button) getView().findViewById(R.id.gridToggleBtn);
         save = (Button) getView().findViewById(R.id.saveBtn);
         connectionsList = (ListView) getView().findViewById(R.id.lvNewDevices);
 

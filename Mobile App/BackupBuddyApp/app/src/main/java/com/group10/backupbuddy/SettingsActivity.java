@@ -202,7 +202,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         toggleBt = (Button) findViewById(R.id.btToggleBtn);
         toggleDiscoverable = (Button) findViewById(R.id.discoverToggleBtn);
         connect = (Button) findViewById(R.id.btConnectBtn);
-        toggleGrid = (Button) findViewById(R.id.gridToggleBtn);
+//        toggleGrid = (Button) findViewById(R.id.gridToggleBtn);
         save = (Button) findViewById(R.id.saveBtn);
         connectionsList = (ListView) findViewById(R.id.lvNewDevices);
 
@@ -228,10 +228,10 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         if(isDicoverable)
             toggleDiscoverable.setText("Make Device Discoverable");
 
-        if(gridActive)
-            toggleGrid.setText("Turn Distance Grid OFF");
-        else
-            toggleGrid.setText("Turn Distance Grid ON");
+//        if(gridActive)
+//            toggleGrid.setText("Turn Distance Grid OFF");
+//        else
+//            toggleGrid.setText("Turn Distance Grid ON");
 
         if(connectionsList.getChildCount() == 0)
         {
@@ -243,15 +243,15 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         else
             connect.setText("Connect");
 
-        toggleGrid.setOnClickListener(e -> {
-
-            gridActive = !gridActive;
-
-            if(gridActive)
-                toggleGrid.setText("Turn Distance Grid OFF");
-            else
-                toggleGrid.setText("Turn Distance Grid ON");
-        });
+//        toggleGrid.setOnClickListener(e -> {
+//
+//            gridActive = !gridActive;
+//
+//            if(gridActive)
+//                toggleGrid.setText("Turn Distance Grid OFF");
+//            else
+//                toggleGrid.setText("Turn Distance Grid ON");
+//        });
 
         // Exits the activity with modified values
         save.setOnClickListener(e -> finish());

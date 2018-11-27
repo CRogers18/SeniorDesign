@@ -21,8 +21,8 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="236dp"
-        android:layout_marginStart="500dp"
+        android:layout_marginBottom="284dp"
+        android:layout_marginStart="524dp"
         android:text="Exit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

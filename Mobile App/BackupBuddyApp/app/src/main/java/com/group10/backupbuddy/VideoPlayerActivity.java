@@ -26,6 +26,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         mController.setAnchorView(videoView);
         videoView.setMediaController(mController);
         String VideoUrl= getIntent().getStringExtra("VideoUrl");
+        getSupportActionBar().hide();
 
         Uri uri = Uri.parse(VideoUrl);
         videoView.setVideoURI(uri);

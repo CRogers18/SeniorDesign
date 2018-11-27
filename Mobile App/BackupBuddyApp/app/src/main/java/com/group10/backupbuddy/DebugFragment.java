@@ -20,6 +20,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -85,7 +86,7 @@ public class DebugFragment extends Fragment {
             //System.out.println("Second before divide: " + (((dataConvert[1] )<< 8) | dataConvert[0]));
 
             dist_1 = ((dataConvert[0] << 8) | dataConvert[1]) / 58;
-            dist_1 = ((dataConvert[1] << 8) | dataConvert[0]) / 58;
+//            dist_1 = ((dataConvert[1] << 8) | dataConvert[0]) / 58;
 
             //float whatever = (float)dist_1 / (float)58;
             //dist_1 = whatever;
@@ -95,14 +96,14 @@ public class DebugFragment extends Fragment {
             // System.out.println("Val1: " + dist_1);
 
             dist_2 = ((dataConvert[2] << 8) | dataConvert[3]) / 58;
-            dist_2 = ((dataConvert[3] << 8) | dataConvert[2]) / 58;
+//            dist_2 = ((dataConvert[3] << 8) | dataConvert[2]) / 58;
 
 //            System.out.println("Data5: " + dataConvert[5] + " Data4: " + dataConvert[4]);
 //            System.out.println("Val2: " + dist_2);
 //
 //
             dist_3 = ((dataConvert[4] << 8) | dataConvert[5]) / 58;
-            dist_3 = ((dataConvert[5] << 8) | dataConvert[4]) / 58;
+//            dist_3 = ((dataConvert[5] << 8) | dataConvert[4]) / 58;
 
 //            System.out.println("Val3: " + dist_3);
 
@@ -115,35 +116,54 @@ public class DebugFragment extends Fragment {
 //             accel_z = (dataConvert[4] << 4) | dataConvert[5]>>4;
 
             //dylan slack code 1
-            accel_x = (dataConvert[1]|(dataConvert[0]<<8))>>6;
+           // 7 6
+//            accel_x = (dataConvert[6]|(dataConvert[7]<<8))>>6;
+////
+//            if (accel_x>0x01FF)
+//            {
+//                accel_x=(((~accel_x)+1)-0xFC00);
+//            }
+//
+//            //98
+//            accel_y = (dataConvert[8]|(dataConvert[9]<<8))>>6;
+//            if (accel_y>0x01FF)
+//            {
+//                accel_y=(((~accel_y)+1)-0xFC00);
+//            }
+//
+//            //11 10
+//            accel_z = (dataConvert[10]|(dataConvert[11]<<8))>>6;
+//            if (accel_z>0x01FF)
+//            {
+//                accel_z=(((~accel_z)+1)-0xFC00);
+//            }
 
-            if (accel_x>0x01FF)
-            {
-                accel_x=(((~accel_x)+1)-0xFC00);
-            }
+// Colman code
 
-            accel_y = (dataConvert[3]|(dataConvert[2]<<8))>>6;
-            if (accel_y>0x01FF)
-            {
-                accel_y=(((~accel_y)+1)-0xFC00);
-            }
+            accel_x = (dataConvert[6] << 8) | dataConvert[7];
+            accel_y = (dataConvert[8] << 8) | dataConvert[9];
+            accel_z = (dataConvert[10] << 8) | dataConvert[11];
 
-            accel_z = (dataConvert[5]|(dataConvert[4]<<8))>>6;
-            if (accel_z>0x01FF)
-            {
-                accel_z=(((~accel_z)+1)-0xFC00);
-            }
+            double x , y , z;
+            x = (short)accel_x / 128;
+            y = (short)accel_y / 128;
+            z = (short)accel_z / 128;
 
-
-
-
+//
+//            Short.toString((short) accel_x);
+//            Short.toString((short) accel_y);
+//            Short.toString((short) accel_z);
 
             //  accel_z = (byteBuffer2[0] << 4 | byteBuffer2[1] >> 4);
           //  accel_z = (byteBuffer2[2] << 4 | byteBuffer2[3] >> 4);
           //  accel_z =  (byteBuffer2[4] << 4 | byteBuffer2[5] >> 4);
 
             final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
-                    Float.toString(accel_x),  Float.toString(accel_y),  Float.toString(accel_z) };
+                    Double.toString( x),  Double.toString( y),  Double.toString( z) };
+
+
+//            final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3),
+//                    Short.toString( (short)accel_x),  Short.toString( (short)accel_y),  Short.toString( (short)accel_z) };
 //           final String[] strVals = { Integer.toString(dist_1), Integer.toString(dist_2), Integer.toString(dist_3)};
 //final String[] strVals = {Integer.toString(dist_1)};
 //              final String[] strVals = {
@@ -157,6 +177,20 @@ public class DebugFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+//        System.out.println("I have left this view");
+        System.out.println("this is mmsocket: "+ mmSocket);
+        if(mmSocket !=null) {
+            try {
+                closeBT();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Override
     public void onStart(){
         super.onStart();
@@ -283,11 +317,11 @@ public class DebugFragment extends Fragment {
 //        System.out.println("A[4] = " + a[4]);
 //        System.out.println("A[5] = " + a[5]);
 
-//        if(a[0] != "0")
+        if(a[0] != "0")
             value1.setText(a[0]);
-//        if(a[1] != "0")
+        if(a[1] != "0")
             value2.setText(a[1]);
-//        if(a[2] != "0")
+        if(a[2] != "0")
             value3.setText(a[2]);
 
         acc1.setText(a[3]);
@@ -367,7 +401,23 @@ public class DebugFragment extends Fragment {
                                     System.out.println("eat my whole ass");
                                     byteCount = 0;
                                 }
+                                if(packetBytes[i] == 0x33)
+                                {
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
+                                    System.out.println("Dylan wants to know abouot you");
 
+                                }
 
                                 if(byteCount > 11 && didI)
                                 {
@@ -406,7 +456,7 @@ public class DebugFragment extends Fragment {
     {
         String msg = myTextbox.getText().toString();
         // msg += "\n";
-        byte test = 0x7f;
+        byte test = 0x1a;
         System.out.println("Coleman data: " + msg.getBytes());
         //mmOutputStream.write(msg.getBytes());
         mmOutputStream.write(test);

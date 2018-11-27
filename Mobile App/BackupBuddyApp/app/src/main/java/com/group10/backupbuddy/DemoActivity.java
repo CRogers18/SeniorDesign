@@ -1,5 +1,7 @@
 package com.group10.backupbuddy;
 
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -93,6 +95,8 @@ public class DemoActivity extends AppCompatActivity {
     String rightbarcolor = "#5900FF22";
     String centerbarcolor = "#5900FF22";
     Button exit;
+    ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+    boolean cancelme = true;
 
 
 
@@ -399,12 +403,15 @@ public class DemoActivity extends AppCompatActivity {
         workerThread.start();
     }
 
-    void sendData() throws IOException
+    void sendData(int test) throws IOException
     {
         //String msg = myTextbox.getText().toString();
 //        String msg = "W";
         //msg += "\n";
-        mmOutputStream.write(0xBB);
+        if(test == 0)
+            mmOutputStream.write(0xBB);
+        if(test == 1)
+            mmOutputStream.write(0x7f);
 //        System.out.println("Data Sent");
        // myLabel.setText("Data Sent");
     }
@@ -422,7 +429,7 @@ public class DemoActivity extends AppCompatActivity {
         System.out.println("Bluetooth closed");
     }
 
-    private static final int TIMEOUT = 20;
+    private static final int TIMEOUT = 300;
 
     ProgressDialog mDialog;
     VideoView videoView;
@@ -494,7 +501,7 @@ public class DemoActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 try {
-                    sendData();
+                    sendData(0);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -503,6 +510,8 @@ public class DemoActivity extends AppCompatActivity {
                     closeBT();
                 }
                 catch (IOException ex) { }
+
+                cancelme = false;
 
                 Intent Home = new Intent(DemoActivity.this, navigationFun.class);
                 DemoActivity.this.startActivity(Home);
@@ -558,6 +567,8 @@ public class DemoActivity extends AppCompatActivity {
 //            openBT();
 //        }
 //        catch (IOException ex) { }
+        exit.setEnabled(false);
+
 
         // use this to make another view that counts down from 10 or so for the pi to boot
 //        try {
@@ -565,7 +576,6 @@ public class DemoActivity extends AppCompatActivity {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-
 
 //        try
 //        {
@@ -578,14 +588,19 @@ public class DemoActivity extends AppCompatActivity {
 //        webView.getSettings().setLoadWithOverviewMode(true);
 //        webView.getSettings().setUseWideViewPort(true);
 //        webView.loadUrl("http://192.168.4.1:8080/?action=stream");
-
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
 
 
                 Mjpeg.newInstance()
                 .open("http://192.168.4.1:8080/?action=stream", TIMEOUT)
                 .subscribe(inputStream -> {
                     mjpegView.setSource(inputStream);
-                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
+//                    mjpegView.setDisplayMode(MjpegView);
+                    mjpegView.setDisplayMode(DisplayMode.FULLSCREEN);
                     mjpegView.showFps(true);
                     mjpegView.flipVertical(true);
 
@@ -593,7 +608,9 @@ public class DemoActivity extends AppCompatActivity {
                     Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
                     Toast.makeText(this, "Error Server is down", Toast.LENGTH_LONG).show();
                 });
-      //  MjpegView viewer = (MjpegView) findViewById(R.id.mjpegview);
+
+
+        //  MjpegView viewer = (MjpegView) findViewById(R.id.mjpegview);
       //  mjpegView.setMode(MjpegView.MODE_FIT_WIDTH);
       //  mjpegView.setAdjustHeight(true);
        // mjpegView.setUrl("http://www.example.com/mjpeg.php?id=1234");
@@ -649,6 +666,7 @@ public class DemoActivity extends AppCompatActivity {
 //                if(mmOutputStream==null)
                    mmOutputStream = mmSocket.getOutputStream();
                    mmInputStream = mmSocket.getInputStream();
+                   sendData(1);
 
                }
                // System.out.println("Bluetooth Opened");
@@ -661,6 +679,7 @@ public class DemoActivity extends AppCompatActivity {
                 readBuffer = new byte[1024];
                 boolean didI = false;
                 boolean turn = true;
+                boolean beep = true;
                 while(!stopWorker)
                 {
 //                    System.out.println("test3");
@@ -737,18 +756,19 @@ public class DemoActivity extends AppCompatActivity {
                                     //String centerbarcolor = "#5900FF22";
 
                                     //green
-                                    if(dist_1 >= 120)
+                                    System.out.println("this is distance 1: " + dist_1);
+                                    if(dist_1 >= 60)
                                     {
                                         leftbarcolor = "#5900FF22";
                                     }
 
-                                    if(dist_1 < 120 && dist_1 > 50)
+                                    if(dist_1 < 60 && dist_1 > 30)
                                     {
                                         leftbarcolor = "#59FFC400";
                                     }
 
                                     //red
-                                    if(dist_1 < 50)
+                                    if(dist_1 < 30)
                                     {
                                         leftbarcolor = "#59ff0000";
                                     }
@@ -781,6 +801,13 @@ public class DemoActivity extends AppCompatActivity {
                                     if(dist_3 < 50)
                                     {
                                         centerbarcolor = "#59ff0000";
+                                    }
+
+                                    if(leftbarcolor == "#59ff0000" ||rightbarcolor == "#59ff0000" || centerbarcolor == "#59ff0000" && beep)
+                                    {
+                                        //BEEEP
+                                        beep = false;
+                                        toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2,150);
                                     }
                                     //break;
                                     stopWorker = true;
@@ -831,15 +858,20 @@ public class DemoActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+//            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+
             //update ui here
 //            System.out.println("do it make it here?");
+
             leftBar.setBackgroundColor(Color.parseColor(leftbarcolor));
             rightBar.setBackgroundColor(Color.parseColor(rightbarcolor));
             centerBar.setBackgroundColor(Color.parseColor(centerbarcolor));
 
+            exit.setEnabled(true);
 
 
-            new LongRunningTask().execute();
+            if(cancelme)
+                new LongRunningTask().execute();
 
             //red color is #59ff0000
             // yellow color is #59FFC400

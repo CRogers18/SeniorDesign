@@ -67,30 +67,13 @@
             android:layout_height="wrap_content"
             android:text="Connect" />
 
-        <Button
-            android:id="@+id/gridToggleBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Disable Distance Grid"
-            android:textAlignment="center" />
+
 
         <android.support.v4.widget.Space
             android:id="@+id/space3"
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Overlay Opacity"
-            android:textAlignment="center"
-            android:textSize="24sp" />
-
-        <SeekBar
-            android:id="@+id/gridOpacityBar"
-            style="@android:style/Widget.DeviceDefault.Light.SeekBar"
-            android:layout_width="match_parent"
-            android:layout_height="28dp" />
 
         <Button
             android:id="@+id/saveBtn"
