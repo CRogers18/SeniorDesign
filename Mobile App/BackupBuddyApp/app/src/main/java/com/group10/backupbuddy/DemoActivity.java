@@ -408,10 +408,12 @@ public class DemoActivity extends AppCompatActivity {
         //String msg = myTextbox.getText().toString();
 //        String msg = "W";
         //msg += "\n";
+
         if(test == 0)
             mmOutputStream.write(0xBB);
         if(test == 1)
             mmOutputStream.write(0x7f);
+
 //        System.out.println("Data Sent");
        // myLabel.setText("Data Sent");
     }
@@ -680,7 +682,7 @@ public class DemoActivity extends AppCompatActivity {
                 boolean didI = false;
                 boolean turn = true;
                 boolean beep = true;
-                while(!stopWorker)
+                while(!stopWorker && mmInputStream!=null)
                 {
 //                    System.out.println("test3");
                     try

@@ -5,17 +5,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.bumptech.glide.Glide;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -62,6 +71,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.test = video.getVideo();
 //        holder.imageView.setImageURI(video.getImage());
 
+
+        String test = video.getVideo().toString();
+        String test2 = video.getImage().toString();
+        String firstPart = test.substring(19, test.length());
+        String SecondPart = test2.substring(19,test2.length());
+
+        System.out.println("firstPart = :"+firstPart);
+        System.out.println("SecondPart = :" +SecondPart);
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,41 +90,51 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 notifyItemRemoved(newPosition);
                 notifyItemRangeChanged(newPosition,videoList.size());
 
-                String url = "http://10.0.2.2/delete.php";
-                RequestQueue rq = Volley.newRequestQueue(context);
-                HashMap<String, String> parameters = new HashMap<String, String>();
-                parameters.put("userId", video.getImage());
-                parameters.put("id", video.getVideo());
+//                RequestQueue rq = Volley.newRequestQueue(context);
+                RequestQueue queue = Volley.newRequestQueue(context);
 
-                JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(parameters),
+                String serverUrl = "http://192.168.4.1/begin.php";
 
-                        new Response.Listener<JSONObject>() {
+
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
+                        new Response.Listener<String>() {
                             @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-//                                    VolleyLog.v("Response:%n %s", response.toString(4));
-                                    System.out.println(response);
-                                    if(Integer.parseInt(response.getString("id")) == 0) {
-//                                        Toast.makeText(getApplicationContext(), "Incorrect Username or Password", Toast.LENGTH_SHORT).show();
-
-                                    }else {
-//                                        Toast.makeText(getApplicationContext(), "Successfully Logged in", Toast.LENGTH_SHORT).show();
-//                                        Intent nextView = new Intent(LoginActivity.this, MainActivity.class);
-//                                        nextView.putExtra("ID", response.getString("id"));
-//                                        startActivity(nextView);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                            public void onResponse(String response) {
+                                Log.d("TAG", "response = "+ response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("TAG", "Error = "+ error);
                     }
-                });
+                })
+                {
 
-                rq.add(req);
+
+                    @Override
+                    public Map<String, String> getHeaders()  {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Accept", "application/json");
+                        headers.put("first_name", firstPart);
+                        headers.put("last_name", SecondPart);
+
+
+                        headers.put("Content-Type", "application/json");
+                        return headers;
+                    }
+                    ////
+                    @Override
+                    public Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("first_name",video.getVideo().toString());
+                        params.put("last_name",video.getImage().toString());
+                        return params; //return the parameters
+                    }
+                };
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+
 
 
             }

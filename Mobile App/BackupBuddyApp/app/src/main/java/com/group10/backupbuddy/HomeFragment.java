@@ -358,30 +358,40 @@ public class HomeFragment extends Fragment {
                 }
                 try {
                     openBT();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(200);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-                try {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(200);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
                     sendData(0);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(100);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-
-                try {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
                     closeBT();
+
+
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+//
+//                try {
+//                    sendData(0);
+//                } catch (IOException e1) {
+//                    e1.printStackTrace();
+//                }
+//                try {
+//                    TimeUnit.MILLISECONDS.sleep(100);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
+//
+//                try {
+//                    closeBT();
+//                } catch (IOException e1) {
+//                    e1.printStackTrace();
+//                }
 
          return null;
         }
